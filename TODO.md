@@ -11,13 +11,4 @@
 - Lektion 12: Steuerung des Rovers mit der App
 - Lektion 13: Untersuchung des Energiesystems des Mars-Rovers
 
-**Hardware**
 
-1. Kamera-Adapterplatine
-2. Ultraschallmodul
-3. IR-Hindernisvermeidungsmodul
-4. 4 RGB-LED-Streifen
-5. Servo
-6. TT-Motor
-7. Solarpanel
-8. 18650 Batterie

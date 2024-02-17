@@ -1,150 +1,151 @@
-/**
- * @file main.cpp
- * @brief Hauptsteuerungsprogramm für den Arduino GalaxyRVR.
- *
- * Dieses Programm ermöglicht die Fernsteuerung des GalaxyRVR über die
- * SunFounder Controller APP. Es integriert verschiedene Module wie
- * IR-Hinderniserkennung, Ultraschallsensorik, SoftPWM für die Motorensteuerung
- * und eine KI-Kamera für fortgeschrittene Steuerungsmöglichkeiten.
- *
- * @version 1.1.0
- * @date 2023-09-17
- * @author Sunfounder
- *
- * @see https://github.com/sunfounder/galaxy-rvr.git
- * @see https://docs.sunfounder.com/projects/galaxy-rvr/en/latest/
+/*******************************************************************
+  The control program of the Ardunio GalaxyRVR.
+  
+  Please install the SunFounder Controller APP from APP Store(iOS) or Google Play(Android).
+
+  Development test environment:
+    - Arduino IDE 2.0.3
+  Board tools:
+    - Arduino AVR Boards 1.8.3
+  Libraries:
+    - IRLremote
+    - SoftPWM
+    - ArduinoJson
+    - Sunfounder_AI_Camera
+
+  Version: 1.0.0
+    -- https://github.com/sunfounder/galaxy-rvr.git
+  
+  Documentation:
+    -- https://docs.sunfounder.com/projects/galaxy-rvr/en/latest/
+
+  Author: Sunfounder
+  Website: https://www.sunfounder.com
+           https://docs.sunfounder.com
+
+********************************************************************/
+#define VERSION "1.1.0"
+
+#include <Arduino.h>
+#include <SoftPWM.h>
+#include <string.h>
+
+
+#include "rgb.h"
+#include "soft_servo.h"
+#include "car_control.h"
+#include "ir_obstacle.h"
+#include "ultrasonic.h"
+#include "cmd_code_config.hpp"
+#include "SunFounder_AI_Camera.h"
+#include "battery.h"
+
+#include <ArduinoJson.h>
+
+/*************************** Configure *******************************/
+/** @name Configure 
+ * 
  */
+///@{
+/** Whether to enable Watchdog */
+#define WATCH_DOG 0
+#if WATCH_DOG
+  #include <avr/wdt.h>
+#endif
 
-#include <Arduino.h> ///< Kernbibliothek für die Arduino-Funktionalität.
-#include <SoftPWM.h> ///< Bibliothek für Software-PWM auf digitalen Pins.
-#include <string.h>  ///< Bibliothek für String-Operationen.
+/** Whether to enable TEST mode */
+#define TEST 0
+#if TEST
+  #include "test.h"
+#endif
 
-#include "SunFounder_AI_Camera.h" ///< Einbinden der Bibliothek für die KI-Kamera.
-#include "battery.h"     ///< Bibliothek für die Batteriestatusabfrage.
-#include "car_control.h" ///< Steuerungsbibliothek für die Bewegung des Fahrzeugs.
-#include "cmd_code_config.hpp" ///< Konfigurationsheader für Befehlscodes.
-#include "ir_obstacle.h"       ///< Bibliothek für die IR-Hinderniserkennung.
-#include "rgb.h"               ///< Bibliothek für die Steuerung der RGB-LEDs.
-#include "soft_servo.h" ///< Bibliothek für die Servosteuerung über Software-PWM.
-#include "ultrasonic.h" ///< Bibliothek für die Ultraschallsensorik.
+/** Whether to enable print Memory Used */
+#define MEM 0
+#if MEM
+  // https://github.com/mpflaga/Arduino-MemoryFree
+  #include <MemoryFree.h>
+  #include <pgmStrToRAM.h> // not needed for new way. but good to have for reference.
+#endif
 
-// Konfigurationsdefinitionen
-#define WATCH_DOG 0 ///< Definition, ob der Watchdog aktiviert sein soll.
-#define TEST 0      ///< Definition, ob der Testmodus aktiviert sein soll.
-#define MEM 0 ///< Definition, ob die Speichernutzung ausgegeben werden soll.
-#define WIFI_MODE WIFI_MODE_AP   ///< Definition des WLAN-Modus.
-#define SSID "GalaxyRVR"         ///< WLAN-SSID.
-#define PASSWORD "12345678"      ///< WLAN-Passwort.
-#define NAME "GalaxyRVR"         ///< Produktname.
-#define TYPE "GalaxyRVR"         ///< Produkttyp.
-#define PORT "8765"              ///< Portnummer für WebSocket-Kommunikation.
-#define OBSTACLE_AVOID_POWER 80  ///< Motorleistung für Hindernisvermeidung.
-#define OBSTACLE_FOLLOW_POWER 80 ///< Motorleistung für Hindernisverfolgung.
-#define VOICE_CONTROL_POWER 80   ///< Motorleistung für Sprachsteuerung.
-#define FOLLOW_DISTANCE 20 ///< Distanz für die Verfolgung von Hindernissen.
-#define WS_HEADER "WS+"    ///< Header für WebSocket-Kommunikation.
 
-/*********************** Globale Variablen ****************************/
-/**
- * @var AiCamera aiCam
- * @brief Instanz der AiCamera-Klasse für die serielle Kommunikation mit dem
- * ESP32-CAM Modul.
- */
+/** Configure Wifi mode, SSID, password*/
+#define WIFI_MODE WIFI_MODE_AP
+#define SSID "GalaxyRVR"
+#define PASSWORD "12345678"
+
+// #define WIFI_MODE WIFI_MODE_STA
+// #define SSID "xxxxxxxxxx"
+// #define PASSWORD "xxxxxxxxxx"
+
+/** Configure product name */
+#define NAME "GalaxyRVR"
+
+/** Configure product type */
+#define TYPE "GalaxyRVR"
+
+/** Configure websockets port
+ * Sunfounder Controller APP fixed using port 8765
+*/
+#define PORT "8765"
+
+
+/** Configure the motors speed in different modes */
+#define OBSTACLE_AVOID_POWER 80
+#define OBSTACLE_FOLLOW_POWER 80
+#define VOICE_CONTROL_POWER 80
+
+/** Configure the follow distance of obstacle follow */
+#define FOLLOW_DISTANCE 20
+
+/** websocket communication headers */
+#define WS_HEADER "WS+"
+
+///@}
+
+/*********************** Global variables ****************************/
+/** Instantiate aicamera, a class for serial communication with ESP32-CAM */
 AiCamera aiCam = AiCamera(NAME, TYPE);
 
-/**
- * @var SoftServo servo
- * @brief Instanz der SoftServo-Klasse zur Steuerung des Kamera-Servos.
- */
+/* Config Camera Servo */
 SoftServo servo;
 
-#define SERVO_PIN 6 ///< Pin-Nummer, an die der Servo angeschlossen ist.
-#define SERVO_REVERSE                                                          \
-  false ///< Gibt an, ob die Servo-Bewegungsrichtung umgekehrt werden soll.
+#define SERVO_PIN 6
+#define SERVO_REVERSE false
 
-/**
- * @var char voice_buf_temp[20]
- * @brief Temporäres Buffer für die Sprachsteuerungsbefehle.
- */
+/* variables of voice control */
 char voice_buf_temp[20];
-
-/**
- * @var int8_t current_voice_code
- * @brief Aktueller Sprachbefehlscode.
- */
 int8_t current_voice_code = -1;
+int32_t voice_time = 0; // uint:s
+uint32_t voice_start_time = 0; // uint:s
 
-/**
- * @var int32_t voice_time
- * @brief Dauer des aktuellen Sprachbefehls in Sekunden.
- */
-int32_t voice_time = 0;
-
-/**
- * @var uint32_t voice_start_time
- * @brief Startzeitpunkt des aktuellen Sprachbefehls.
- */
-uint32_t voice_start_time = 0;
-
-/**
- * @var int8_t leftMotorPower
- * @brief Leistung des linken Motors.
- */
+/* variables of motors and servo*/
 int8_t leftMotorPower = 0;
-
-/**
- * @var int8_t rightMotorPower
- * @brief Leistung des rechten Motors.
- */
 int8_t rightMotorPower = 0;
-
-/**
- * @var uint8_t servoAngle
- * @brief Aktueller Winkel des Servos.
- */
 uint8_t servoAngle = 90;
 
-/**
- * @var uint32_t rgb_blink_interval
- * @brief Intervall für das Blinken der RGB-LED, wenn die Verbindung getrennt
- * ist.
- */
-uint32_t rgb_blink_interval = 500;
-
-/**
- * @var uint32_t rgb_blink_start_time
- * @brief Startzeitpunkt des RGB-Blinkens.
- */
+/* variables of rgb_blink when disconnected */
+uint32_t rgb_blink_interval = 500; // uint: ms
 uint32_t rgb_blink_start_time = 0;
-
-/**
- * @var bool rgb_blink_flag
- * @brief Zustand des RGB-Blinkens.
- */
 bool rgb_blink_flag = 0;
 
-/**
- * @var bool cam_lamp_status
- * @brief Status der ESP32-CAM-Blitzlampe.
- */
+/* variable of esp32-cam flash lamp*/
 bool cam_lamp_status = false;
+//@}
 
+/*********************** setup() & loop() ************************/
 /**
- * @brief Initialisierungsfunktion für Arduino.
- *
- * Diese Funktion initialisiert die Peripheriegeräte und konfiguriert das Gerät
- * für den Start.
+ * setup(), Ardunio main program entrance
+ * 
+ * Initialization of some peripherals
  */
 void setup() {
   int m = millis();
   Serial.begin(115200);
-  Serial.print("GalaxyRVR version ");
-  Serial.println(VERSION);
+  Serial.print("GalaxyRVR version "); Serial.println(VERSION);
 
   Serial.println(F("Initialzing..."));
 #if defined(ARDUINO_AVR_UNO)
-  SoftPWMBegin(); // init softpwm, before the motors initialization and the rgb
-                  // LEDs initialization
+  SoftPWMBegin(); // init softpwm, before the motors initialization and the rgb LEDs initialization
 #endif
   rgbBegin();
   rgbWrite(ORANGE); // init hint
@@ -159,32 +160,32 @@ void setup() {
   aiCam.setOnReceived(onReceive);
 #endif
 
-  while (millis() - m < 500) { // Wait for peripherals to be ready
+  while (millis() - m < 500) {  // Wait for peripherals to be ready
     delay(1);
   }
 
 #if WATCH_DOG
-  wdt_disable(); /* Disable the watchdog and wait for more than 2 seconds */
-  delay(3000); /* Done so that the Arduino doesn't keep resetting infinitely in
-                  case of wrong configuration */
+  wdt_disable();       /* Disable the watchdog and wait for more than 2 seconds */
+  delay(3000);         /* Done so that the Arduino doesn't keep resetting infinitely in case of wrong configuration */
   wdt_enable(WDTO_2S); /* Enable the watchdog with a timeout of 2 seconds */
 #endif
 
   Serial.println(F("Okie!"));
-  rgbWrite(GREEN); // init finished
+  rgbWrite(GREEN);  // init finished
 }
 
 /**
- * @brief Hauptprogrammschleife.
- *
- * Enthält die Hauptlogik des Programms, einschließlich der Behandlung von
- * Kameradaten und Modussteuerung.
+ * loop(), Ardunio main loop
+ * 
+ * - inclued
+ *  - aiCam.loop()
+ *  - modeHandler()
+ * - or modules test
  */
 void loop() {
 #if !TEST
   // because the value in a is constantly updated
-  // Note that the cycle interval of the "aiCam.loop()" should be less than 80ms
-  // to avoid data d
+  // Note that the cycle interval of the "aiCam.loop()" should be less than 80ms to avoid data d
   aiCam.loop();
   if (aiCam.ws_connected == false) {
     currentMode = MODE_DISCONNECT;
@@ -195,8 +196,7 @@ void loop() {
       rgb_blink_flag = 1;
     }
   } else {
-    if (currentMode == MODE_DISCONNECT)
-      currentMode = MODE_NONE;
+    if (currentMode == MODE_DISCONNECT) currentMode = MODE_NONE;
   }
   modeHandler();
 #else
@@ -213,66 +213,69 @@ void loop() {
 #endif
 
 #if MEM
-  Serial.print(F("Free RAM = ")); // F function does the same and is now a built
-                                  // in library, in IDE > 1.0.0
-  Serial.println(freeMemory());   // print how much RAM is available in bytes.
+  Serial.print(F("Free RAM = "));  //F function does the same and is now a built in library, in IDE > 1.0.0
+  Serial.println(freeMemory());    // print how much RAM is available in bytes.
 #endif
 }
 
+/***************************** Functions ******************************/
 /**
- * @brief Behandelt den aktuellen Modus des RVR.
- *
- * Ausführung des entsprechenden Programms basierend auf dem eingestellten
- * Modus.
+ * modeHandler(), Execute the corresponding program according to the set mode
+ * 
+ * - inclued
+ *  - MODE_NONE
+ *  - MODE_OBSTACLE_FOLLOWING
+ *  - MODE_OBSTACLE_AVOIDANCE
+ *  - MODE_REMOTE_CONTROL
+ *  - MODE_APP_CONTROL
  */
 void modeHandler() {
   switch (currentMode) {
-  case MODE_NONE:
-    rgbWrite(MODE_NONE_COLOR);
-    carStop();
-    servoAngle = 90;
-    servo.write(servoAngle);
-    break;
-  case MODE_DISCONNECT:
-    if (millis() - rgb_blink_start_time > rgb_blink_interval) {
-      rgb_blink_flag = !rgb_blink_flag;
-      rgb_blink_start_time = millis();
-    }
-    if (rgb_blink_flag)
-      rgbWrite(MODE_DISCONNECT_COLOR);
-    else
-      rgbOff();
-    carStop();
-    servoAngle = 90;
-    servo.write(servoAngle);
-    break;
-  case MODE_OBSTACLE_FOLLOWING:
-    rgbWrite(MODE_OBSTACLE_FOLLOWING_COLOR);
-    servo.write(servoAngle);
-    obstacleFollowing();
-    break;
-  case MODE_OBSTACLE_AVOIDANCE:
-    rgbWrite(MODE_OBSTACLE_AVOIDANCE_COLOR);
-    servo.write(servoAngle);
-    obstacleAvoidance();
-    break;
-  case MODE_APP_CONTROL:
-    rgbWrite(MODE_APP_CONTROL_COLOR);
-    servo.write(servoAngle);
-    carSetMotors(leftMotorPower, rightMotorPower);
-    break;
-  case MODE_VOICE_CONTROL:
-    rgbWrite(MODE_VOICE_CONTROL_COLOR);
-    servo.write(servoAngle);
-    voice_control();
-    break;
-  default:
-    break;
+    case MODE_NONE:
+      rgbWrite(MODE_NONE_COLOR);
+      carStop();
+      servoAngle = 90;
+      servo.write(servoAngle);
+      break;
+    case MODE_DISCONNECT:
+      if (millis() - rgb_blink_start_time > rgb_blink_interval) {
+        rgb_blink_flag = !rgb_blink_flag;
+        rgb_blink_start_time = millis();
+      }
+      if (rgb_blink_flag) rgbWrite(MODE_DISCONNECT_COLOR);
+      else rgbOff();
+      carStop();
+      servoAngle = 90;
+      servo.write(servoAngle);
+      break;
+    case MODE_OBSTACLE_FOLLOWING:
+      rgbWrite(MODE_OBSTACLE_FOLLOWING_COLOR);
+      servo.write(servoAngle);
+      obstacleFollowing();
+      break;
+    case MODE_OBSTACLE_AVOIDANCE:
+      rgbWrite(MODE_OBSTACLE_AVOIDANCE_COLOR);
+      servo.write(servoAngle);
+      obstacleAvoidance();
+      break;
+    case MODE_APP_CONTROL:
+      rgbWrite(MODE_APP_CONTROL_COLOR);
+      servo.write(servoAngle);
+      carSetMotors(leftMotorPower, rightMotorPower);
+      break;
+    case MODE_VOICE_CONTROL:
+      rgbWrite(MODE_VOICE_CONTROL_COLOR);
+      servo.write(servoAngle);
+      voice_control();
+      break;
+    default:
+      break;
   }
 }
 
+
 /**
- * @brief Folgeprogramm für Hindernisse.
+ * Obstacle follow program
  */
 void obstacleFollowing() {
   byte result = irObstacleRead();
@@ -298,35 +301,32 @@ void obstacleFollowing() {
 }
 
 /**
- * @brief Ausweichprogramm für Hindernisse.
+ * Obstacle avoidance program
  */
-int8_t last_clear = -1; // last_clear, 1, left; -1, right;
+int8_t last_clear = -1;  // last_clear, 1, left; -1, right;
 bool last_forward = false;
 
 void obstacleAvoidance() {
   byte result = irObstacleRead();
-  bool leftIsClear = result & 0b00000010;  // left, clear: True
-  bool rightIsClear = result & 0b00000001; // right, clear: True
+  bool leftIsClear = result & 0b00000010;   // left, clear: True
+  bool rightIsClear = result & 0b00000001;  // right, clear: True
   bool middleIsClear = ultrasonicIsClear();
 
-  if (middleIsClear && leftIsClear && rightIsClear) { // 111
+  if (middleIsClear && leftIsClear && rightIsClear) {  // 111
     last_forward = true;
     carForward(OBSTACLE_AVOID_POWER);
   } else {
-    if ((leftIsClear && rightIsClear) ||
-        (!leftIsClear && !rightIsClear)) { // 101, 000, 010
-      if (last_clear == 1)
-        carTurnLeft(OBSTACLE_AVOID_POWER);
-      else
-        carTurnRight(OBSTACLE_AVOID_POWER);
+    if ((leftIsClear && rightIsClear) || (!leftIsClear && !rightIsClear)) {  // 101, 000, 010
+      if (last_clear == 1) carTurnLeft(OBSTACLE_AVOID_POWER);
+      else carTurnRight(OBSTACLE_AVOID_POWER);
       last_forward = false;
-    } else if (leftIsClear) { // 100, 110
+    } else if (leftIsClear) {  // 100, 110
       if (last_clear == 1 || last_forward == true) {
         carTurnLeft(OBSTACLE_AVOID_POWER);
         last_clear = 1;
         last_forward = false;
       }
-    } else if (rightIsClear) { // 001, 011
+    } else if (rightIsClear) {  // 001, 011
       if (last_clear == -1 || last_forward == true) {
         carTurnRight(OBSTACLE_AVOID_POWER);
         last_clear = -1;
@@ -337,7 +337,7 @@ void obstacleAvoidance() {
 }
 
 /**
- * @brief Sprachsteuerungsprogramm.
+ * voice control program
  */
 void voice_control() {
   if (voice_time == -1) {
@@ -354,7 +354,7 @@ void voice_control() {
 }
 
 /**
- * @brief Verarbeitet empfangene Daten über Websockets.
+ * websocket received data processing
  */
 void onReceive() {
   // --------------------- send data ---------------------
@@ -364,12 +364,11 @@ void onReceive() {
 
   // IR obstacle detection data
   byte result = irObstacleRead();
-  aiCam.sendDoc["N"] = int(!bool(result & 0b00000010)); // left, clear:0
-  aiCam.sendDoc["P"] = int(!bool(result & 0b00000001)); // right, clear:0
+  aiCam.sendDoc["N"] = int(!bool(result & 0b00000010));  // left, clear:0
+  aiCam.sendDoc["P"] = int(!bool(result & 0b00000001));  // right, clear:0
 
   // ultrasonic
-  float usDistance =
-      int(ultrasonicRead() * 100) / 100.0; // round two decimal places
+  float usDistance = int(ultrasonicRead() * 100) / 100.0;  // round two decimal places
   aiCam.sendDoc["O"] = usDistance;
 
   // --------------------- get data ---------------------
@@ -392,8 +391,7 @@ void onReceive() {
       currentMode = MODE_OBSTACLE_FOLLOWING;
     }
   } else {
-    if (currentMode == MODE_OBSTACLE_FOLLOWING ||
-        currentMode == MODE_OBSTACLE_AVOIDANCE) {
+    if (currentMode == MODE_OBSTACLE_FOLLOWING || currentMode == MODE_OBSTACLE_AVOIDANCE) {
       currentMode = MODE_NONE;
       carStop();
       return;
@@ -403,11 +401,11 @@ void onReceive() {
   // cam lamp
   if (aiCam.getSwitch(REGION_M) && !cam_lamp_status) {
     Serial.println("lamp on");
-    aiCam.lamp_on(5); // turn on cam lamp, level 0 ~ 10
+    aiCam.lamp_on(5);  //turn on cam lamp, level 0 ~ 10 
     cam_lamp_status = true;
   } else if (!aiCam.getSwitch(REGION_M) && cam_lamp_status) {
     Serial.println("lamp off");
-    aiCam.lamp_off(); // turn off cam lamp
+    aiCam.lamp_off();  // turn off cam lamp
     cam_lamp_status = false;
   }
 
@@ -420,7 +418,7 @@ void onReceive() {
   }
 
   int8_t code = -1;
-  voice_buf_temp[0] = 0; // voice_buf_temp
+  voice_buf_temp[0] = 0;  // voice_buf_temp
   aiCam.getSpeech(REGION_J, voice_buf_temp);
   if (strlen(voice_buf_temp) > 0) {
     aiCam.sendDoc["J"] = 1;
@@ -458,8 +456,7 @@ void onReceive() {
   int throttle_R = aiCam.getThrottle(REGION_Q);
   // Serial.print("throttle_L: "); Serial.print(throttle_L);
   // Serial.print("throttle_R: "); Serial.println(throttle_R);
-  if (throttle_L != 0 || throttle_R != 0 || throttle_L != leftMotorPower ||
-      throttle_R != rightMotorPower) {
+  if (throttle_L != 0 || throttle_R != 0 || throttle_L != leftMotorPower || throttle_R != rightMotorPower) {
     currentMode = MODE_APP_CONTROL;
     leftMotorPower = throttle_L;
     rightMotorPower = throttle_R;

@@ -85,7 +85,7 @@ Die Schlüsselelemente des Rocker-Bogie-Systems, die den Rovern helfen, schwieri
 2. **Gewichtsverteilung**: Das System verteilt das Gewicht des Rovers gleichmäßig auf alle Räder, was die Wahrscheinlichkeit eines Umkippens verringert und es dem Rover ermöglicht, über Hindernisse zu klettern, die größer sind als seine Räder.
 3. **Anpassungsfähigkeit**: Die Rocker-Bogie-Konstruktion ermöglicht eine außerordentliche Flexibilität in der Bewegung, was dem Rover hilft, über komplexe Oberflächenstrukturen zu navigieren, ohne stecken zu bleiben oder beschädigt zu werden.
 
-## Einstieg in die Welt von Arduino und Programmierung¶
+## Einstieg in die Welt von Arduino und Programmierung
 
 - **Arduino**:
   - Eine benutzerfreundliche Open-Source-Plattform für Hardware und Software.
@@ -143,7 +143,11 @@ Die Schlüsselelemente des Rocker-Bogie-Systems, die den Rovern helfen, schwieri
 Treiberchips mit den Pins 2, 3, 4 und 5 und verwenden die SoftPWM-Bibliothek von Arduino, um PWM auf diesen Pins zu ermöglichen.
 
 ```c++
-// Wie würdest du den Code ändern, um sechs Motoren gleichzeitig zu steuern?
+/**
+ * @file main.cpp
+ * @brief Wie würdest du den Code ändern, um sechs Motoren gleichzeitig zu steuern?
+ */
+#include <Arduino.h>
 const int in3 = 4;
 const int in4 = 5;
 
@@ -167,123 +171,90 @@ void loop() {
 
 ```c++
 
-Um sechs Motoren gleichzeitig zu steuern und dabei die Antriebslogik sowie die Nutzung der SoftPWM-Bibliothek für das Arduino-Board zu berücksichtigen, muss der vorgegebene Code erweitert werden. Da die Pins 2 und 3 für die Steuerung der Motoren A, B, C und die Pins 4 und 5 für die Steuerung der Motoren D, E, F verwendet werden, kann der Code wie folgt angepasst werden, um alle sechs Motoren gleichzeitig zu steuern:
+Um sechs Motoren gleichzeitig zu steuern und dabei die Antriebslogik sowie die Nutzung der SoftPWM-Bibliothek für das Arduino-Board zu berücksichtigen, muss der vorgegebene Code erweitert werden.
 
 ```c++
+// sechs Motoren gleichzeitig zu steuern
+/**
+ * @file main.cpp
+ * @brief Rover vorwärts bewegen und Rover rückwärts bewegen
+ */
+#include <Arduino.h>
 #include <SoftPWM.h>
 
-// Definition der Pins für die Motoren A, B, C
-const int motorA1 = 2; // INA für Motoren A, B, C
-const int motorA2 = 3; // INB für Motoren A, B, C
+// Definition der Pins für die linken Motoren A, B, C
+const int motorA1 = 2; // INA Plus  für Motoren A, B, C sind parallel
+const int motorA2 = 3; // INB Minus für Motoren A, B, C sind parallel
 
-// Definition der Pins für die Motoren D, E, F
-const int motorB1 = 4; // INA für Motoren D, E, F
-const int motorB2 = 5; // INB für Motoren D, E, F
+// Definition der Pins für die rechten Motoren D, E, F
+const int motorB1 = 5; // INA Plus  für Motoren D, E, F sind parallel
+const int motorB2 = 4; // INB Minus für Motoren D, E, F sind parallel
 
 void setup() {
-    // Initialisierung der Pins als Ausgang
-    SoftPWMBegin(); // Start der SoftPWM-Bibliothek
-    
-    pinMode(motorA1, OUTPUT);
-    pinMode(motorA2, OUTPUT);
-    pinMode(motorB1, OUTPUT);
-    pinMode(motorB2, OUTPUT);
-
-    // Setzt die PWM-Auflösung für die Pins
-    SoftPWMSet(motorA1, 0);
-    SoftPWMSet(motorA2, 0);
-    SoftPWMSet(motorB1, 0);
-    SoftPWMSet(motorB2, 0);
+    // Initialisiert die SoftPWM-Bibliothek
+    SoftPWMBegin();
 }
 
 void loop() {
-    // Motoren A, B, C im Uhrzeigersinn
-    SoftPWMSet(motorA1, LOW);
-    SoftPWMSet(motorA2, HIGH);
-    
-    // Motoren D, E, F im Uhrzeigersinn
-    SoftPWMSet(motorB1, LOW);
-    SoftPWMSet(motorB2, HIGH);
-    
-    delay(2000); // Wartezeit
-    
-    // Motoren A, B, C gegen den Uhrzeigersinn
-    SoftPWMSet(motorA1, HIGH);
-    SoftPWMSet(motorA2, LOW);
-    
-    // Motoren D, E, F gegen den Uhrzeigersinn
-    SoftPWMSet(motorB1, HIGH);
-    SoftPWMSet(motorB2, LOW);
-    
-    delay(2000); // Wartezeit
-    
-    // Alle Motoren stoppen (Bremse)
-    SoftPWMSet(motorA1, HIGH);
-    SoftPWMSet(motorA2, HIGH);
-    SoftPWMSet(motorB1, HIGH);
-    SoftPWMSet(motorB2, HIGH);
-    
-    delay(5000); // Wartezeit
+    // Rover vorwärts bewegen
+    // linke Motoren
+    SoftPWMSet(motorA1, 120);  // etwa halbe Geschwindigkeit
+    SoftPWMSet(motorA2, 0);    // Stop
+    // rechte Motoren
+    SoftPWMSet(motorB1, 120);  // etwa halbe Geschwindigkeit
+    SoftPWMSet(motorB2, 0);    // Stop
+
+    // Rover rückwärts bewegen
+    // linke Motoren
+    SoftPWMSet(motorA1, 0);    // Stop
+    SoftPWMSet(motorA2, 120);  // etwa halbe Geschwindigkeit
+    // rechte Motoren
+    SoftPWMSet(motorB1, 0);    // Stop
+    SoftPWMSet(motorB2, 120);  // etwa halbe Geschwindigkeit
 }
 ```
 
-Dieser Code nutzt die SoftPWM-Bibliothek, um PWM-Signale auf den Pins 2, 3, 4 und 5 zu ermöglichen, was eine feinere Kontrolle über die Motorgeschwindigkeit erlaubt. Die Antriebslogik wird beibehalten, indem die Pins in verschiedenen Kombinationen (LOW/HIGH) gesetzt werden, um die Motoren in unterschiedliche Richtungen zu drehen oder sie zu stoppen. Durch die parallele Anbindung der Motoren an jeweils zwei Pins können alle sechs Motoren simultan gesteuert werden, was eine flexible und effektive Kontrolle des Systems ermöglicht.
-
-```
 
 ### Steuerung der Motorgeschwindigkeit (PWM)
 
+
 ```c++
-// Steuerung der Motorgeschwindigkeit
-// SoftPWM, for-Schleife
+/**
+ * @file main.cpp
+ * @brief Steuerung der Motorgeschwindigkeit (PWM)
+ */
+#include <Arduino.h>
 #include <SoftPWM.h>
 
-const int in1 = 2;
-const int in2 = 3;
+const int in1 = 2; // PWM-Pin für Motorrichtung 1
+const int in2 = 3; // PWM-Pin für Motorrichtung 2
 
 void setup() {
+    // Beginnt die serielle Kommunikation
+    Serial.begin(115200);
+    // Initialisiert SoftPWM für alle verwendeten Pins
     SoftPWMBegin();
+    // Setzt die PWM-Werte initial auf 0
+    SoftPWMSet(in1, 0);
+    SoftPWMSet(in2, 0);
 }
 
 void loop() {
-    SoftPWMSet(in1, 0);
-    for (int i = 0; i <= 255; i++) {
-        SoftPWMSet(in2, i);
-        delay(100);
-}
-    delay(1000);
-}
-```
-
-Pulsweitenmodulation (PWM) mit der SoftPWM-Bibliothek in Arduino verwendet wird, um die Geschwindigkeit eines Motors zu steuern. Die SoftPWM-Bibliothek ermöglicht es, PWM auf digitalen Pins zu simulieren, die keine nativen PWM-Fähigkeiten haben. Der Code durchläuft einen Zyklus, bei dem die Geschwindigkeit des Motors schrittweise von 0 bis zum Maximum erhöht wird.
-
-```c++
-#include <SoftPWM.h>
-
-const int in1 = 2;
-const int in2 = 3;
-
-void setup() {
-    SoftPWMBegin();
-    SoftPWMSet(in1, 0);
-}
-
-void loop() {
-    // Geschwindigkeit erhöhen
-    for (int i = 0; i <= 255; i++) {
-        SoftPWMSet(in2, i);
-        delay(20); // Schnellere Änderung der Geschwindigkeit
+    // Setzt in1 auf 0, um sicherzustellen, dass der Motor in eine Richtung dreht
+    SoftPWMSet(in2, 0);
+    // Schleife erhöht die Geschwindigkeit von 30 bis 255
+    for (int i = 30; i <= 70; i++) {
+        SoftPWMSet(in1, i); // Setzt die PWM für den Motor
+        Serial.println("Steuerung der Motorgeschwindigkeit (PWM): " + String(i));
+        delay(100); // Kurze Verzögerung zwischen den Geschwindigkeitsänderungen
+        if (i == 70) {
+            // Wenn i 255 erreicht, stoppt der Motor
+            SoftPWMSet(in1, 0);
+            Serial.println("Motor stoppt für 1 Sekunde.");
+            delay(2000); // Wartet 1 Sekunde, bevor der Motor neu startet
+            break; // Beendet die Schleife, damit sie von vorne beginnen kann
+        }
     }
-    
-    delay(1000); // Kurze Pause bei maximaler Geschwindigkeit
-
-    // Geschwindigkeit verringern
-    for (int i = 255; i >= 0; i--) {
-        SoftPWMSet(in2, i);
-        delay(20); // Schnellere Änderung der Geschwindigkeit
-    }
-
-    delay(1000); // Kurze Pause bei minimaler Geschwindigkeit
 }
 ```
 
@@ -349,45 +320,102 @@ void loop() {
 - **Richtungssteuerung**: Die Richtung eines Motors wird durch Ändern der Polarität der an den Motor angelegten Spannung bestimmt. In einem Programm kann dies durch Wechseln der HIGH/LOW-Zustände der Pins erreicht werden, die den Motor steuern.
 - **Geschwindigkeitssteuerung**: Die Geschwindigkeit eines Motors kann durch Pulsweitenmodulation (PWM) angepasst werden, wobei die durchschnittliche Spannung, die dem Motor zugeführt wird, durch Ändern des Tastverhältnisses des PWM-Signals variiert wird.
 
-### Programmierbeispiele
 
-#### Motorgeschwindigkeit allmählich verringern
+### Motor beschleunigen/verlangsamen im und gegen den Uhrzeigersinn
 
-Um die Motorgeschwindigkeit allmählich zu verringern, kann man eine `for`-Schleife verwenden, die den PWM-Wert von einem hohen Wert schrittweise auf einen niedrigeren Wert reduziert:
 
 ```c++
-for (int i = 255; i >= 0; i--) {
-    analogWrite(motorPin, i);
-    delay(20); // Verzögerung für sichtbare Geschwindigkeitsänderung
+/**
+ * @file main.cpp
+ * @brief Motor beschleunigen/verlangsamen im / gegen den Uhrzeigersinn
+ */
+#include <Arduino.h>
+#include <SoftPWM.h>
+
+const int in1 = 2; // PWM-Pin für Motorrichtung 1
+const int in2 = 3; // PWM-Pin für Motorrichtung 2
+
+void setup() {
+    // Beginnt die serielle Kommunikation
+    Serial.begin(115200);
+    // Initialisiert SoftPWM für alle verwendeten Pins
+    SoftPWMBegin();
+    // Setzt die PWM-Werte initial auf 0
+    SoftPWMSet(in1, 0);
+    SoftPWMSet(in2, 0);
+}
+
+void loop() {
+    // Schleife erhöht die Geschwindigkeit von 0 bis 255 anpassen!!!!!!!!
+    
+    // Beschleunigung im Uhrzeigersinn
+    SoftPWMSet(in2, 0);//Minus
+    for (int i = 30; i <= 70; i++) {
+        SoftPWMSet(in1, i); // Setzt die PWM für den Motor
+        Serial.println("Steuerung der Motorgeschwindigkeit (PWM): " + String(i));
+        delay(100); // Kurze Verzögerung zwischen den Geschwindigkeitsänderungen
+        if (i == 70) {
+            // Wenn i 70 erreicht, stoppt der Motor
+            SoftPWMSet(in1, 0);
+            Serial.println("Motor stoppt für 1 Sekunde.");
+            delay(20); // Wartet 1 Sekunde, bevor der Motor neu startet
+            break; // Beendet die Schleife, damit sie von vorne beginnen kann
+        }
+    }
+
+    // Kurze Pause
+    delay(20);
+
+    // verlangsamen im Uhrzeigersinn
+    for (int i = 70; i >= 30; i--) {
+        SoftPWMSet(in1, i); // Setzt die PWM für den Motor
+        Serial.println("Steuerung der Motorgeschwindigkeit (PWM): " + String(i));
+        delay(100); // Kurze Verzögerung zwischen den Geschwindigkeitsänderungen
+        if (i == 30) {
+            // Wenn i 70 erreicht, stoppt der Motor
+            SoftPWMSet(in1, 0);
+            Serial.println("Motor stoppt für 1 Sekunde.");
+            delay(20); // Wartet 1 Sekunde, bevor der Motor neu startet
+            break; // Beendet die Schleife, damit sie von vorne beginnen kann
+        }
+    }
+
+    // Beschleunigung gegen Uhrzeigersinn
+    SoftPWMSet(in1, 0);//Minus
+    for (int i = 30; i <= 70; i++) {
+        SoftPWMSet(in2, i); // Setzt die PWM für den Motor
+        Serial.println("Steuerung der Motorgeschwindigkeit (PWM): " + String(i));
+        delay(100); // Kurze Verzögerung zwischen den Geschwindigkeitsänderungen
+        if (i == 70) {
+            // Wenn i 70 erreicht, stoppt der Motor
+            SoftPWMSet(in2, 0);
+            Serial.println("Motor stoppt für 1 Sekunde.");
+            delay(20); // Wartet 1 Sekunde, bevor der Motor neu startet
+            break; // Beendet die Schleife, damit sie von vorne beginnen kann
+        }
+    }
+
+    // Kurze Pause
+    delay(20);
+
+    // verlangsamen gegen Uhrzeigersinn
+    for (int i = 70; i >= 30; i--) {
+        SoftPWMSet(in2, i); // Setzt die PWM für den Motor
+        Serial.println("Steuerung der Motorgeschwindigkeit (PWM): " + String(i));
+        delay(100); // Kurze Verzögerung zwischen den Geschwindigkeitsänderungen
+        if (i == 30) {
+            // Wenn i 70 erreicht, stoppt der Motor
+            SoftPWMSet(in2, 0);
+            Serial.println("Motor stoppt für 1 Sekunde.");
+            delay(20); // Wartet 1 Sekunde, bevor der Motor neu startet
+            break; // Beendet die Schleife, damit sie von vorne beginnen kann
+        }
+    }
+
 }
 ```
 
-#### Motor beschleunigen/verlangsamen gegen den Uhrzeigersinn
-
-Die Beschleunigung oder Verlangsamung eines Motors in eine bestimmte Richtung, wie gegen den Uhrzeigersinn, erfordert die Steuerung der Drehrichtung sowie die Anpassung der Geschwindigkeit. Dies kann durch Kombination der Richtungssteuerung und schrittweise Anpassung des PWM-Werts erreicht werden:
-
-```c++
-// Setzt die Richtung auf gegen den Uhrzeigersinn
-digitalWrite(directionPin1, HIGH);
-digitalWrite(directionPin2, LOW);
-
-// Beschleunigung
-for (int i = 0; i <= 255; i++) {
-    analogWrite(speedPin, i);
-    delay(20);
-}
-
-// Kurze Pause
-delay(1000);
-
-// Verlangsamung
-for (int i = 255; i >= 0; i--) {
-    analogWrite(speedPin, i);
-    delay(20);
-}
-```
-
-## Entfesselung der Beweglichkeit des Mars Rovers¶
+## Entfesselung der Beweglichkeit des Mars Rovers
 
 - **Integration von Motoren ins Rocker-Bogie-System**: Das Rocker-Bogie-System ist speziell für die Bewältigung der komplexen und unebenen Marslandschaften konzipiert. Die Einbindung von TT-Motoren in dieses System erweitert dessen Fähigkeit, sich an diverse Geländearten anzupassen, indem es eine verbesserte Mobilität und Stabilität bietet.
 - **Programmierung des Mars Rovers**: Die Verwendung der Arduino-Plattform ermöglicht eine präzise Steuerung der Motoren, was die Grundlage für die Bewegungskontrolle des Rovers bildet. Die Programmierung umfasst die Steuerung der Motordrehrichtung und -geschwindigkeit, um Vorwärts-, Rückwärts- und Drehbewegungen zu realisieren.
@@ -398,253 +426,424 @@ for (int i = 255; i >= 0; i--) {
 2. **Programmbeispiele**: Die Bereitstellung von Codebeispielen illustriert, wie die SoftPWM-Bibliothek genutzt wird, um die Geschwindigkeit und Richtung der Motoren feinabzustimmen. Die Variation der PWM-Werte ermöglicht es, die Geschwindigkeit der Motoren dynamisch anzupassen, was eine differenzierte Steuerung der Bewegung des Rovers ermöglicht.
 3. **Erweiterung der Bewegungssteuerung**: Die Entwicklung von Funktionen für spezifische Bewegungsabläufe erleichtert die Programmstrukturierung und erhöht die Wiederverwendbarkeit des Codes. Durch diese Modularisierung wird der Code nicht nur übersichtlicher, sondern auch flexibler für zukünftige Anpassungen und Erweiterungen.
 
-### Den Rover in Bewegung setzen
+### Motor beschleunigen/verlangsamen im / gegen den Uhrzeigersinn
 
-#### Rover vorwärts bewegen
-
-- **Initialisierung**: Die SoftPWM-Bibliothek wird initialisiert, was es ermöglicht, PWM-Signale auf den Pins `in1`, `in2`, `in3`, und `in4` zu generieren.
-- **Motorsteuerung**:
-  - Die linken Motoren (`in1` und `in2`) werden so gesteuert, dass `in1` auf volle Geschwindigkeit gesetzt wird (255), während `in2` gestoppt wird (0). Dies bewirkt, dass die linken Motoren gegen den Uhrzeigersinn drehen.
-  - Gleichzeitig werden die rechten Motoren (`in3` und `in4`) so gesteuert, dass `in3` gestoppt wird (0) und `in4` auf volle Geschwindigkeit gesetzt wird (255), was zu einer Drehung im Uhrzeigersinn führt.
-- **Ergebnis**: Durch diese Konfiguration der Motorsteuerung bewegt sich der Rover vorwärts, da die gegenüberliegenden Seiten des Rovers in entgegengesetzte Richtungen drehen, wodurch Vorwärtsbewegung entsteht.
 
 ```c++
-// Rover vorwärts bewegen
+/**
+ * @file main.cpp
+ * @brief Motor beschleunigen/verlangsamen im / gegen den Uhrzeigersinn
+ */
+#include <Arduino.h>
 #include <SoftPWM.h>
 
-// Definiert die Pins für die Motoren
-const int in1 = 2;
-const int in2 = 3;
-const int in3 = 4;
-const int in4 = 5;
+// Definition der Pins für die Linken Motoren A, B, C
+const int motorA1 = 2; // INA Plus  für Motoren A, B, C sind parallel
+const int motorA2 = 3; // INB Minus für Motoren A, B, C sind parallel
 
-/*
- * Initialisiert das Programm und die SoftPWM-Bibliothek.
- * Dieser Teil des Codes wird einmal beim Start des Programms ausgeführt.
- */
+// Definition der Pins für die Rechten Motoren D, E, F
+const int motorB1 = 5; // INA Plus  für Motoren D, E, F sind parallel
+const int motorB2 = 4; // INB Minus für Motoren D, E, F sind parallel
+
 void setup() {
-    // Initialisiert die SoftPWM-Bibliothek
+    Serial.begin(115200);
     SoftPWMBegin();
+    SoftPWMSet(motorA1, 0);
+    SoftPWMSet(motorA2, 0);
+    SoftPWMSet(motorB1, 0);
+    SoftPWMSet(motorB2, 0);
 }
 
-/*
- * Hauptteil des Programms, der kontinuierlich ausgeführt wird.
- * Hier wird die Bewegung der Motoren gesteuert, um den Rover vorwärts zu bewegen.
- */
+void controlMotorSpeed(int pin, int startSpeed, int endSpeed, int delayTime, bool increase) {
+    if (increase) {
+        for (int speed = startSpeed; speed <= endSpeed; speed++) {
+            SoftPWMSet(pin, speed);
+            Serial.println("Motor beschleunigen (PWM): " + String(speed));
+            delay(delayTime);
+        }
+    } else {
+        for (int speed = startSpeed; speed >= endSpeed; speed--) {
+            SoftPWMSet(pin, speed);
+            Serial.println("Motor verlangsamen (PWM): " + String(speed));
+            delay(delayTime);
+        }
+    }
+    SoftPWMSet(pin, 0); // Stoppt den Motor nach der Sequenz
+    Serial.println("Motor stoppt für kurze Zeit.");
+    delay(20); // Kurze Pause nach dem Stopp
+}
+
 void loop() {
-    // Setzt die linken Motoren so, dass sie gegen den Uhrzeigersinn drehen
-    SoftPWMSet(in1, 255);  // Volle Geschwindigkeit
-    SoftPWMSet(in2, 0);    // Stop
+    // Linke Seite des Rovers
+    // Beschleunigung im Uhrzeigersinn
+    controlMotorSpeed(motorA1, 30, 70, 100, true);
+    // Verlangsamen im Uhrzeigersinn
+    controlMotorSpeed(motorA1, 70, 30, 100, true);
+    // Beschleunigung gegen Uhrzeigersinn
+    controlMotorSpeed(motorA2, 30, 70, 100, true);
+    // Verlangsamen gegen Uhrzeigersinn
+    controlMotorSpeed(motorA2, 70, 30, 100, false);
 
-    // Setzt die rechten Motoren so, dass sie im Uhrzeigersinn drehen
-    SoftPWMSet(in3, 0);    // Stop
-    SoftPWMSet(in4, 255);  // Volle Geschwindigkeit
-}
-
-```
-
-#### Rover rückwärts bewegen
-
-- **Initialisierung**: Wie im ersten Beispiel wird die SoftPWM-Bibliothek initialisiert.
-- **Motorsteuerung**:
-  - Die Steuerung der linken Motoren (`in1` und `in2`) wird umgekehrt, indem `in1` gestoppt wird (0) und `in2` auf volle Geschwindigkeit gesetzt wird (255), was eine Drehung im Uhrzeigersinn bewirkt.
-  - Für die rechten Motoren (`in3` und `in4`) wird `in3` auf volle Geschwindigkeit gesetzt (255) und `in4` gestoppt (0), was eine Drehung gegen den Uhrzeigersinn zur Folge hat.
-- **Ergebnis**: Diese Anordnung führt dazu, dass der Rover sich rückwärts bewegt, da die Motoren auf beiden Seiten des Rovers in umgekehrter Richtung zur Vorwärtsbewegung drehen.
-
-```c++
-// Rover rückwärts bewegen
-#include <SoftPWM.h>
-
-// Definiert die Pins für die Motoren
-const int in1 = 2;
-const int in2 = 3;
-const int in3 = 4;
-const int in4 = 5;
-
-/*
- * Initialisiert das Programm und die SoftPWM-Bibliothek.
- * Dieser Teil des Codes wird einmal beim Start des Programms ausgeführt.
- */
-void setup() {
-    // Initialisiert die SoftPWM-Bibliothek
-    SoftPWMBegin();
-}
-
-/*
- * Hauptteil des Programms, der kontinuierlich ausgeführt wird.
- * Hier wird die Bewegung der Motoren gesteuert, um den Rover rückwärts zu bewegen.
- */
-void loop() {
-    // Setzt die linken Motoren so, dass sie im Uhrzeigersinn drehen
-    SoftPWMSet(in1, 0);    // Stop
-    SoftPWMSet(in2, 255);  // Volle Geschwindigkeit
-
-    // Setzt die rechten Motoren so, dass sie gegen den Uhrzeigersinn drehen
-    SoftPWMSet(in3, 255);  // Volle Geschwindigkeit
-    SoftPWMSet(in4, 0);    // Stop
+    // Rechte Seite des Rovers
+    // Beschleunigung im Uhrzeigersinn
+    controlMotorSpeed(motorB1, 30, 70, 100, true);
+    // Verlangsamen im Uhrzeigersinn
+    controlMotorSpeed(motorB1, 70, 30, 100, true);
+    // Beschleunigung gegen Uhrzeigersinn
+    controlMotorSpeed(motorB2, 30, 70, 100, true);
+    // Verlangsamen gegen Uhrzeigersinn
+    controlMotorSpeed(motorB2, 70, 30, 100, false);
 }
 ```
 
-### Rover in andere Richtungen bewegen
 
-1. Methode besteht darin, die Räder auf der linken Seite langsamer als die auf der rechten Seite rotieren zu lassen. Dieser Geschwindigkeitsunterschied wird den Rover nach links abbiegen lassen.
+### Steuert die Bewegungen eines Rovers
 
-2. Methode besteht darin, beide linken und rechten Motoren in dieselbe Richtung rotieren zu lassen (in diesem Fall im Uhrzeigersinn), was den Rover auf seiner Achse nach links drehen lässt.
 
 ```c++
-// Methode 1: Unterschiedliche Geschwindigkeiten auf jeder Seite
+/**
+ * @file main.cpp
+ * @brief Steuert die Bewegungen eines Rovers, einschließlich Vorwärts-, Rückwärtsbewegungen und Drehungen.
+ */
+
+#include <Arduino.h>
 #include <SoftPWM.h>
 
-// Definiert die Pins für die Motoren
-const int in1 = 2;
-const int in2 = 3;
-const int in3 = 4;
-const int in4 = 5;
+// Definition der Pins für die linken Motoren A, B, C
+#define LEFT_MOTOR_FORWARD_PIN 2 // Pin für Vorwärtsbewegung der linken Motoren (A, B, C)
+#define LEFT_MOTOR_REVERSE_PIN 3 // Pin für Rückwärtsbewegung der linken Motoren (A, B, C)
+// Definition der Pins für die rechten Motoren D, E, F
+#define RIGHT_MOTOR_FORWARD_PIN 5 // Pin für Vorwärtsbewegung der rechten Motoren (D, E, F)
+#define RIGHT_MOTOR_REVERSE_PIN 4 // Pin für Rückwärtsbewegung der rechten Motoren (D, E, F)
 
-/*
- * Initialisiert das Programm und die SoftPWM-Bibliothek.
- * Dieser Teil des Codes wird einmal beim Start des Programms ausgeführt.
+#define FORWARD_SPEED 255 // Maximalgeschwindigkeit
+#define MIN_SPEED 30 // Minimalgeschwindigkeit, um MotorBrummen zu vermeiden
+#define STOP 0 // Stopp-Signal
+
+// Funktionsprototyp
+void stopMotors(); 
+
+/**
+ * @brief Initialisiert die Motorsteuerung und die serielle Kommunikation.
  */
 void setup() {
-    // Initialisiert die SoftPWM-Bibliothek
+    Serial.begin(115200);
     SoftPWMBegin();
+    // Initialisiert alle Motoren auf 0 (gestoppt)
+    SoftPWMSet(LEFT_MOTOR_FORWARD_PIN, 0);
+    SoftPWMSet(LEFT_MOTOR_REVERSE_PIN, 0);
+    SoftPWMSet(RIGHT_MOTOR_FORWARD_PIN, 0);
+    SoftPWMSet(RIGHT_MOTOR_REVERSE_PIN, 0);
 }
 
-/*
- * Hauptteil des Programms, der kontinuierlich ausgeführt wird.
- * Steuert die Bewegung der Motoren, um den Rover nach links abbiegen zu lassen.
+/**
+ * @brief Setzt die Geschwindigkeit der Motoren.
+ * 
+ * @param speedLeftForward Geschwindigkeit für die linke Seite vorwärts.
+ * @param speedLeftBackward Geschwindigkeit für die linke Seite rückwärts.
+ * @param speedRightForward Geschwindigkeit für die rechte Seite vorwärts.
+ * @param speedRightBackward Geschwindigkeit für die rechte Seite rückwärts.
+ */
+void setMotorSpeeds(int speedLeftForward, int speedLeftBackward, int speedRightForward, int speedRightBackward) {
+    SoftPWMSet(LEFT_MOTOR_FORWARD_PIN, max(speedLeftForward, STOP));
+    SoftPWMSet(LEFT_MOTOR_REVERSE_PIN, max(speedLeftBackward, STOP));
+    SoftPWMSet(RIGHT_MOTOR_FORWARD_PIN, max(speedRightForward, STOP));
+    SoftPWMSet(RIGHT_MOTOR_REVERSE_PIN, max(speedRightBackward, STOP));
+}
+
+/**
+ * @brief Bewegt den Rover vorwärts.
+ * 
+ * @param speed Optional. Die Geschwindigkeit für die Vorwärtsbewegung. Standard ist die Hälfte der maximalen Geschwindigkeit.
+ */
+void moveForward(int speed = FORWARD_SPEED / 2) {
+    setMotorSpeeds(speed, STOP, speed, STOP);
+    Serial.print("Rover bewegt sich vorwärts mit Geschwindigkeit: ");
+    Serial.println(speed);
+}
+/**
+ * @brief Bewegt den Rover rückwärts.
+ * 
+ * @param speed Optional. Die Geschwindigkeit für die Rückwärtsbewegung. Standard ist ein Viertel der maximalen Geschwindigkeit.
+ */
+void moveBackward(int speed = FORWARD_SPEED / 4) {
+    setMotorSpeeds(STOP, speed, STOP, speed);
+    Serial.print("Rover bewegt sich rückwärts mit Geschwindigkeit: ");
+    Serial.println(speed);
+}
+/**
+ * @brief Dreht den Rover nach rechts.
+ * 
+ * @param speed Optional. Die Geschwindigkeit für die Drehung. Standard ist ein Viertel der maximalen Geschwindigkeit.
+ */
+void turnRight(int speed = FORWARD_SPEED / 4) {
+    setMotorSpeeds(speed, STOP, STOP, speed);
+    Serial.print("Rover dreht nach rechts mit Geschwindigkeit: ");
+    Serial.println(speed);
+}
+/**
+ * @brief Dreht den Rover nach links.
+ * 
+ * @param speed Optional. Die Geschwindigkeit für die Drehung. Standard ist die maximale Geschwindigkeit.
+ */
+void turnLeft(int speed = FORWARD_SPEED / 4) {
+    setMotorSpeeds(STOP, speed, speed, STOP);
+    Serial.print("Rover dreht nach links mit Geschwindigkeit: ");
+    Serial.println(speed);
+}
+/**
+ * @brief Stoppt alle Motoren des Rovers.
+ */
+void stopMotors() {
+    setMotorSpeeds(STOP, STOP, STOP, STOP);
+    Serial.println("Rover stoppt.");
+}
+
+/**
+ * @brief Hauptprogrammschleife, steuert die Bewegungen des Rovers.
  */
 void loop() {
-    // Setzt die linken Motoren so, dass sie mit niedriger Geschwindigkeit gegen den Uhrzeigersinn drehen
-    SoftPWMSet(in1, 40); // Niedrige Geschwindigkeit
-    SoftPWMSet(in2, 0);  // Stop
-
-    // Setzt die rechten Motoren so, dass sie mit höherer Geschwindigkeit im Uhrzeigersinn drehen
-    SoftPWMSet(in3, 0);  // Stop
-    SoftPWMSet(in4, 200); // Höhere Geschwindigkeit
-
-    delay(2000);  // Wartezeit von 2 Sekunden
+    moveForward(); // Bewegt sich vorwärts mit halber Geschwindigkeit
+    delay(800);
+    stopMotors();
+    delay(2000);
+    moveBackward(); // Bewegt sich rückwärts mit einem Viertel der Geschwindigkeit
+    delay(800);
+    stopMotors();
+    delay(2000);
+    turnRight(); // Dreht nach rechts mit einem Viertel der Geschwindigkeit
+    delay(3000);
+    stopMotors();
+    delay(2000);
+    turnLeft(); // Dreht nach links mit voller Geschwindigkeit
+    delay(3000);
+    stopMotors();
+    delay(2000);
 }
 ```
 
+
+## Erkundung des Hindernisvermeidungsmoduls
+
+- Einführung in das Infrarot-Hindernisvermeidungsmodul, das als "Augen" des Mars Rovers dient, um seitliche Hindernisse zu erkennen und zu umgehen.
+- Erläuterung der Installation und Integration der Hindernisvermeidungsmodule in den Rover.
+- Vorstellung des Arbeitsprinzips des Infrarot-Hindernisvermeidungsmoduls, das Infrarotlicht nutzt, um Hindernisse zu erkennen und entsprechende Signale auszusenden.
+- Beschreibung der physischen Komponenten und Pin-Definitionen des Moduls, einschließlich des EN-Pins für die Aktivierung und der Anpassungsmöglichkeiten über Potentiometer.
+- Erklärung der Funktionsweise des Moduls mit IR-Sender und -Empfänger, die Hindernisse in einem Bereich von 2-40 cm erkennen können, sowie der Einfluss der Objektfarbe auf die Erkennungsdistanz.
+- Anleitung zum Auslesen der Signale von zwei Hindernisvermeidungsmodulen mittels Arduino, um Hindernisse zu erkennen und entsprechend zu reagieren.
+- Schrittweise Anleitung zur Anpassung der Erkennungsdistanz der Module, um die optimale Funktionsweise des Rovers zu gewährleisten.
+- Entwurf eines automatischen Hindernisvermeidungssystems, das auf der Erkennung durch die Module basiert, mit spezifischen Reaktionen des Rovers auf erkannte Hindernisse.
+- Reflexion über das Verhalten des Rovers bei der Hinderniserkennung und Hinweis auf zukünftige Lektionen zur weiteren Verbesserung des Systems.
+
+
+
+### Pin-belegung Infrarot-Hindernisvermeidungsmodul
+
+- **GND (Ground):** Dient als gemeinsamer Bezugspunkt für die Stromversorgung und das Signal des Moduls, essentiell für die Stabilität und Funktionalität des Schaltkreises.
+- **+ (VCC):** Die Stromversorgungsleitung, die typischerweise zwischen 3,3V und 5V DC liegt. Die Flexibilität in der Stromversorgung macht das Modul kompatibel mit einer Vielzahl von Mikrocontrollern und Entwicklungsboards.
+- **Out (Output):** Dieser Pin liefert das Signal, das den Zustand der Hinderniserkennung anzeigt. Ein hoher Pegel signalisiert keine Hindernisse, während ein niedriger Pegel die Erkennung eines Objekts anzeigt. Diese binäre Signalübertragung ermöglicht eine direkte Integration in Logikschaltungen und Mikrocontroller-Inputs.
+- **EN (Enable):** Ermöglicht die Aktivierung oder Deaktivierung des Moduls. Eine direkte Verbindung mit GND bedeutet eine ständige Aktivierung des Moduls. Die Möglichkeit, diesen Pin zu steuern, eröffnet erweiterte Anwendungsgebiete, in denen die Sensortätigkeit programmatisch umgeschaltet werden soll.
+
+### Arbeitsprinzip des Infrarot-Hindernisvermeidungsmoduls:
+
+Das Herzstück des Moduls bilden ein Infrarot-Sender und -Empfänger, die zusammenarbeiten, um die Präsenz und Distanz von Objekten zu detektieren. Der Sender emittiert kontinuierlich Infrarotstrahlung, die vom Empfänger detektiert wird, wenn sie von einem Hindernis reflektiert wird. Diese Art der Reflexion ermöglicht eine präzise Hinderniserkennung.
+
+### Störunterdrückung und Einfluss der Objektfarbe:
+
+Die Effektivität der Hinderniserkennung kann durch die Oberflächenbeschaffenheit und Farbe des Objekts beeinflusst werden. Dunkle Farben absorbieren Infrarotlicht stärker, wodurch die Reflexion minimiert und die Erkennungsdistanz reduziert wird. Helle Oberflächen, insbesondere Weiß, reflektieren Infrarotstrahlung effizienter, was die maximale Erkennungsdistanz des Moduls erhöht.
+
+### Feinabstimmung durch Potentiometer:
+
+Durch die Justierung dieser Potentiometer kann die Erkennungsdistanz des Moduls an die spezifischen Anforderungen der Anwendung angepasst werden. Dies erlaubt eine präzise Steuerung der Sensorik, um optimale Ergebnisse in verschiedenen Einsatzgebieten zu erzielen.
+
+### Auslesen der 2 Module
+
+1. **Initialisierung:**
+   - Die Pins für die IR-Module werden als Eingänge konfiguriert, um die Signale der Infrarot-Sensoren lesen zu können.
+   - Die serielle Kommunikation wird mit einer Baudrate von 9600 gestartet. Dies ermöglicht die Übertragung der Sensorwerte an den Computer zur Anzeige im seriellen Monitor.
+
+2. **Hauptprogrammschleife (loop):**
+   - Die digitalen Werte der beiden IR-Module werden gelesen. Diese Werte geben an, ob ein Hindernis erkannt wurde (`0`) oder nicht (`1`).
+   - Die gelesenen Werte werden über den seriellen Port ausgegeben. Für jedes Modul wird angegeben, ob ein Hindernis vorliegt oder nicht.
+   - Das Programm wartet 200 Millisekunden (`delay(200)`), um die Lesbarkeit der ausgegebenen Werte zu verbessern und eine kontinuierliche Flut von Daten zu vermeiden.
+
+### Detailierte Beschreibung des Programmflusses:
+
+**Programmfluss** - Visualisieren in einem Flussdiagramm
+
+- **Setup-Phase:**
+  - **PIN-Modus einstellen:** Zuerst werden die Pins, an denen die IR-Sensoren angeschlossen sind, als Eingänge (`INPUT`) definiert. Dies ist notwendig, damit der Arduino die von den Sensoren kommenden Signale lesen kann.
+  - **Serielle Kommunikation starten:** Anschließend wird die serielle Kommunikation initialisiert, was für die Datenübertragung zum Computer erforderlich ist. Die Baudrate von 9600 wird gewählt, da sie eine gängige Rate für viele Arduino-Projekte darstellt und eine ausreichende Übertragungsgeschwindigkeit bietet.
+
+- **Loop-Phase:**
+  - **Sensorwerte lesen:** In jedem Durchlauf der Hauptschleife (`loop`) werden die digitalen Signale der IR-Sensoren gelesen. Diese Signale zeigen an, ob die Sensoren ein Hindernis vor sich wahrnehmen.
+  - **Werte ausgeben:** Die gelesenen Werte werden dann zusammen mit einer beschreibenden Nachricht über den seriellen Port ausgegeben. Diese Ausgabe ermöglicht es dem Benutzer, die Sensorwerte in Echtzeit zu überwachen.
+  - **Verzögerung einfügen:** Zwischen den Ausgaben wird eine kurze Verzögerung eingefügt, um die Ausgabe im seriellen Monitor lesbarer zu machen und dem Benutzer Zeit zu geben, die Informationen zu verarbeiten.
+
+Dieser Programmfluss ermöglicht es, die Funktionalität der Infrarot-Hindernisvermeidungsmodule zu testen und zu demonstrieren. Es ist ein grundlegendes Beispiel für die Nutzung von Sensoren zur Umgebungswahrnehmung in Robotik- und Automatisierungsprojekten.
+
 ```c++
-// Methode 2: Alle Motoren in dieselbe Richtung drehen
-#include <SoftPWM.h>
+// Definiere die Pins für die IR-Module
+#define IR_RIGHT 7
+#define IR_LEFT 8
 
-// Definiert die Pins der Motoren
-const int in1 = 2;
-const int in2 = 3;
-const int in3 = 4;
-const int in4 = 5;
-
-/*
- * Initialisiert das Programm und die SoftPWM-Bibliothek.
- * Dieser Teil des Codes wird einmal beim Start des Programms ausgeführt.
- */
 void setup() {
-    // Initialisiert die SoftPWM-Bibliothek
-    SoftPWMBegin();
+  // Setze die Pins der IR-Module als Eingänge
+  pinMode(IR_RIGHT, INPUT);
+  pinMode(IR_LEFT, INPUT);
+
+  // Beginne die serielle Kommunikation
+  Serial.begin(9600);
 }
 
-/*
- * Hauptteil des Programms, der kontinuierlich ausgeführt wird.
- * Steuert die Bewegung der Motoren, sodass alle Motoren im Uhrzeigersinn drehen.
- */
 void loop() {
-    // Setzt alle Motoren so, dass sie im Uhrzeigersinn drehen
-    SoftPWMSet(in1, 0);    // Stoppt den Motor in1
-    SoftPWMSet(in2, 255);  // Volle Geschwindigkeit für den Motor in2
-    SoftPWMSet(in3, 0);    // Stoppt den Motor in3
-    SoftPWMSet(in4, 255);  // Volle Geschwindigkeit für den Motor in4
+  // Lese die Werte von den IR-Modulen
+  int rightValue = digitalRead(IR_RIGHT);
+  int leftValue = digitalRead(IR_LEFT);
+
+  // Drucke die Werte auf den seriellen Monitor
+  Serial.print("Rechter IR: ");
+  Serial.println(rightValue);
+  Serial.print("Linker IR: ");
+  Serial.println(leftValue);
+
+  // Warte kurz, um die Lesbarkeit zu verbessern
+  delay(200);
 }
 ```
 
+### Anpassen der Erkennungsdistanz
+
+Anpassung der Erkennungsdistanzen von Infrarot-Hindernisvermeidungsmodulen ist ein kritischer Schritt zur Optimierung der Leistung eines Mars Rovers in seiner Umgebung.
+
+- **Bedeutung der Anpassung:** 
+  - Die voreingestellten Erkennungsdistanzen der Infrarotmodule sind möglicherweise nicht ideal für alle Umgebungen.
+  - Zu kurze Distanzen könnten zu Kollisionen mit Hindernissen führen.
+  - Zu weite Distanzen könnten unnötige Ausweichmanöver verursachen, selbst wenn Hindernisse noch weit entfernt sind.
+
+- **Anpassungsprozess:**
+  1. **Rechtes Hindernisvermeidungsmodul justieren:**
+     - Überprüfe das Modul auf eventuelle Fehlausrichtungen durch Transportstöße und richte es gegebenenfalls gerade.
+     - Platziere ein Hindernis (z.B. die Verpackungsbox des Rover-Kits) etwa 20 cm vor dem Modul.
+     - Drehe das Potentiometer am Modul, bis die Anzeigeleuchte aktiv wird.
+     - Teste die Einstellung, indem du das Hindernis bewegst, um die Genauigkeit der Erkennung zu überprüfen. Stelle bei Bedarf das andere Potentiometer ein.
+
+  2. **Linkes Hindernisvermeidungsmodul justieren:**
+     - Wiederhole den gleichen Prozess wie beim rechten Modul, um eine konsistente Erkennungsdistanz zu gewährleisten.
+
+
+### Entwurf eines automatischen Hindernisvermeidungssystems
+
+**Programmfluss** - Visualisieren in einem Flussdiagramm
+
+Das Programm steuert einen Rover mithilfe von Infrarot-Hindernisvermeidungsmodulen und SoftPWM zur Geschwindigkeitsregelung. Der Rover kann vorwärts, rückwärts, nach rechts und nach links navigieren, abhängig von den Signalen der IR-Sensoren. Hier ist eine Zusammenfassung des Programmflusses:
+
+1. **Initialisierung:**
+   - Die `SoftPWM` Bibliothek wird initialisiert, um eine präzise Geschwindigkeitskontrolle der Motoren zu ermöglichen.
+   - Die Pins für die IR-Sensoren werden als Eingänge konfiguriert, um die Hinderniserkennung zu ermöglichen.
+
+2. **Hauptprogrammschleife (loop):**
+   - Die Werte von beiden IR-Sensoren (rechts und links) werden gelesen.
+   - Basierend auf den gelesenen Werten der IR-Sensoren entscheidet das Programm, in welche Richtung der Rover bewegt werden soll:
+     - Wenn der Weg rechts blockiert ist (`rightValue == 0` und `leftValue == 1`), dreht der Rover nach hinten rechts.
+     - Wenn der Weg links blockiert ist (`rightValue == 1` und `leftValue == 0`), dreht der Rover nach hinten links.
+     - Wenn beide Wege blockiert sind (`rightValue == 0` und `leftValue == 0`), bewegt sich der Rover rückwärts.
+     - Wenn beide Wege frei sind, bewegt sich der Rover vorwärts.
+
+3. **Bewegungsfunktionen:**
+   - `moveBackward(int speed)`: Setzt die Motoren so, dass der Rover rückwärts fährt.
+   - `moveForward(int speed)`: Setzt die Motoren so, dass der Rover vorwärts fährt.
+   - `backRight(int speed)`: Dreht den Rover nach hinten rechts.
+   - `backLeft(int speed)`: Dreht den Rover nach hinten links.
+
+Jede Bewegungsfunktion nimmt eine Geschwindigkeit (`speed`) als Parameter, die mittels `SoftPWMSet()` auf die entsprechenden Motorpins angewendet wird, um die Motoren in die gewünschte Richtung zu drehen.
+
+Das Programm bietet eine einfache, aber effektive Methode zur Steuerung eines Rovers unter Verwendung von Infrarot-Hindernisvermeidung. Es ermöglicht dem Rover, automatisch Hindernissen auszuweichen, indem es die Richtung basierend auf den Eingängen der IR-Sensoren ändert.
+
+
 ```c++
-// In alle Richtungen bewegen
 #include <SoftPWM.h>
 
-// Definiert die Pins der Motoren
+// Definiere die Pins für die Motoren
 const int in1 = 2;
 const int in2 = 3;
 const int in3 = 4;
 const int in4 = 5;
 
-/*
- * Initialisiert das Programm und die SoftPWM-Bibliothek.
- * Wird einmal beim Programmstart ausgeführt.
- */
+// Definiere die Pins für die IR-Module
+#define IR_RIGHT 7
+#define IR_LEFT 8
+
 void setup() {
-  // Initialisiert die SoftPWM-Bibliothek
+  // Initialisiere SoftPWM
   SoftPWMBegin();
+
+  // Setze die Pins der IR-Module als Eingänge
+  pinMode(IR_RIGHT, INPUT);
+  pinMode(IR_LEFT, INPUT);
 }
 
-/*
- * Hauptfunktion, die kontinuierlich ausgeführt wird.
- * Koordiniert die Bewegungen des Rovers.
- */
 void loop() {
-  moveForward(200); // Bewegt den Rover vorwärts
-  delay(1000); // Wartezeit
+  // Lese Werte von den IR-Sensoren
+  int rightValue = digitalRead(IR_RIGHT);
+  int leftValue = digitalRead(IR_LEFT);
 
-  moveBackward(200);  // Bewegt den Rover rückwärts
-  delay(1000); // Wartezeit
+  // Steuere die Bewegungen des Rovers basierend auf den Werten der IR-Sensoren
+  if (rightValue == 0 && leftValue == 1) {  // Weg rechts blockiert
+    backRight(150);
+  } else if (rightValue == 1 && leftValue == 0) {  // Weg links blockiert
+    backLeft(150);
+  } else if (rightValue == 0 && leftValue == 0) {  // Beide Wege blockiert
+    moveBackward(150);
+  } else {  // Wege frei
+    moveForward(150);
+  }
 
-  turnLeft(200); // Dreht den Rover nach links
-  delay(1000); // Wartezeit
-
-  turnRight(200); // Dreht den Rover nach rechts
-  delay(1000); // Wartezeit
-
-  stopMove(); // Hält den Rover an
-  delay(5000); // Wartezeit
+  delay(100);
 }
 
-// Bewegt den Rover vorwärts
-void moveForward(int speed) {
-  // Setzt die linken Motoren auf gegen den Uhrzeigersinn
-  SoftPWMSet(in1, speed);
-  SoftPWMSet(in2, 0);
-
-  // Setzt die rechten Motoren auf im Uhrzeigersinn
-  SoftPWMSet(in3, 0);
-  SoftPWMSet(in4, speed);
-}
-
-// Bewegt den Rover rückwärts
+// Funktion, um den Rover rückwärts zu bewegen
 void moveBackward(int speed) {
-  // Setzt die linken Motoren auf im Uhrzeigersinn
-  SoftPWMSet(in1, 0);
-  SoftPWMSet(in2, speed);
+  // Setze die linken Motoren so, dass sie im Uhrzeigersinn drehen
+  SoftPWMSet(in1, 0);      // Stopp
+  SoftPWMSet(in2, speed);  // Volle Geschwindigkeit
 
-  // Setzt die rechten Motoren auf gegen den Uhrzeigersinn
-  SoftPWMSet(in3, speed);
-  SoftPWMSet(in4, 0);
+  // Setze die rechten Motoren so, dass sie gegen den Uhrzeigersinn drehen
+  SoftPWMSet(in3, speed);  // Volle Geschwindigkeit
+  SoftPWMSet(in4, 0);      // Stopp
 }
 
-// Dreht den Rover nach links
-void turnLeft(int speed) {
-  // Setzt alle Motoren auf im Uhrzeigersinn
-  SoftPWMSet(in1, 0);
-  SoftPWMSet(in2, speed);
+void moveForward(int speed) {
+  // Setze die linken Motoren so, dass sie gegen den Uhrzeigersinn drehen
+  SoftPWMSet(in1, speed);
+  SoftPWMSet(in2, 0);
+
+  // Setze die rechten Motoren so, dass sie im Uhrzeigersinn drehen
   SoftPWMSet(in3, 0);
   SoftPWMSet(in4, speed);
 }
 
-// Dreht den Rover nach rechts
-void turnRight(int speed) {
-  // Setzt alle Motoren auf gegen den Uhrzeigersinn
-  SoftPWMSet(in1, speed);
-  SoftPWMSet(in2, 0);
-  SoftPWMSet(in3, speed);
+// Funktion, um nach hinten rechts zu drehen
+void backRight(int speed) {
+  SoftPWMSet(in1, 0);
+  SoftPWMSet(in2, speed);
+  SoftPWMSet(in3, 0);
   SoftPWMSet(in4, 0);
 }
 
-// Stoppt die Bewegung des Rovers
-void stopMove() {
-  // Stoppt alle Motoren
+// Funktion, um nach hinten links zu drehen
+void backLeft(int speed) {
   SoftPWMSet(in1, 0);
   SoftPWMSet(in2, 0);
-  SoftPWMSet(in3, 0);
+  SoftPWMSet(in3, speed);
   SoftPWMSet(in4, 0);
 }
 ```
+
+### Reflexion Infarotsensor
+
+- Beobachten Sie, ob sich der Rover so bewegt, wie Sie es erwartet haben.
+
+- Oder setzen Sie ihn verschiedenen Lichtverhältnissen aus, um zu sehen, wie sich seine Bewegungen ändern.
+  
+- Während er geschickt Hindernissen zu seiner Linken und Rechten ausweicht, könnte er Schwierigkeiten haben, kleinere Hindernisse direkt vor ihm zu erkennen. Wie können wir diese Herausforderung meistern?
