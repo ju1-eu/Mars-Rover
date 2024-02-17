@@ -3,7 +3,7 @@
  * @brief Hauptsteuerungsprogramm für das Arduino-Projekt mit Motoren, RGB-LED
  * und Ultraschallsensor.
  *
- * Dieses Programm demonstriert die Grundlagen der Motorsteuerung,
+ * Dieses Programm testet die Motorsteuerung,
  * RGB-LED-Ansteuerung und Distanzmessung mit einem Ultraschallsensor.
  * Es ist für den Einsatz auf einem Arduino UNO Board ausgelegt.
  *
@@ -29,13 +29,13 @@
 #define ULTRASONIC_PIN_ECHO 10
 
 // Konstanten für die Ultraschallsensorik
-#define MAX_DISTANCE 300 // Maximale Distanz (in cm)
-#define ULTRASONIC_READ_TIMEOUT                                                \
-  18000 // Timeout für Lesevorgänge (in Mikrosekunden)
+#define MAX_DISTANCE 300  // Maximale Distanz (in cm)
+#define ULTRASONIC_READ_TIMEOUT \
+  18000  // Timeout für Lesevorgänge (in Mikrosekunden)
 
-Servo servo;               // Servo-Objekt
-#define SERVO_PIN 6        // Servo Pin-Nummer
-#define SERVO_REVERSE true // Servo Umkehr-Flag
+Servo servo;                // Servo-Objekt
+#define SERVO_PIN 6         // Servo Pin-Nummer
+#define SERVO_REVERSE true  // Servo Umkehr-Flag
 
 /**
  * @brief Initialisiert die Hardware und grundlegende Konfigurationen.
@@ -69,7 +69,7 @@ void setup() {
   servo.write(90);
 
 #if defined(ARDUINO_AVR_UNO)
-  SoftPWMBegin(); // Initialisierung von SoftPWM
+  SoftPWMBegin();  // Initialisierung von SoftPWM
 #endif
 }
 
@@ -125,27 +125,27 @@ void rgb_test() {
  */
 void ultasonic_test() {
   if (millis() / 1000 % 2 < 1)
-    return; // Führt die Messung nur jede zweite Sekunde durch
+    return;  // Führt die Messung nur jede zweite Sekunde durch
 
   pinMode(ULTRASONIC_PIN_TRIG, OUTPUT);
   digitalWrite(ULTRASONIC_PIN_TRIG, LOW);
   delayMicroseconds(2);
   digitalWrite(ULTRASONIC_PIN_TRIG,
-               HIGH); // Sendet einen 10 Mikrosekunden langen Impuls
+               HIGH);  // Sendet einen 10 Mikrosekunden langen Impuls
   delayMicroseconds(10);
   digitalWrite(ULTRASONIC_PIN_TRIG, LOW);
   pinMode(ULTRASONIC_PIN_ECHO, INPUT);
 
-  noInterrupts(); // Deaktiviert Unterbrechungen, um die Messung nicht zu
-                  // beeinflussen
+  noInterrupts();  // Deaktiviert Unterbrechungen, um die Messung nicht zu
+                   // beeinflussen
 
   // Misst die Dauer des Echosignals
   float duration = pulseIn(ULTRASONIC_PIN_ECHO, HIGH, ULTRASONIC_READ_TIMEOUT);
 
   // Berechnet die Distanz basierend auf der Dauer des Echos
-  float distance = duration * 0.017; // Umrechnung der Zeit in Distanz
+  float distance = duration * 0.017;  // Umrechnung der Zeit in Distanz
 
-  interrupts(); // Reaktiviert Unterbrechungen
+  interrupts();  // Reaktiviert Unterbrechungen
 
   // Überprüft, ob die gemessene Distanz größer als die maximale Distanz ist
   if (distance > MAX_DISTANCE || distance == 0) {
@@ -153,15 +153,15 @@ void ultasonic_test() {
   } else {
     Serial.print("Ultrasonic read: ");
     Serial.println(distance,
-                   2); // Gibt die Distanz mit zwei Nachkommastellen aus
+                   2);  // Gibt die Distanz mit zwei Nachkommastellen aus
   }
 
-  delay(200); // Kurze Pause, um nicht zu häufig zu messen
+  delay(200);  // Kurze Pause, um nicht zu häufig zu messen
 }
 
 void loop() {
   // Funktionsaufrufe auskommentieren, wenn benötigt
-  motor_test();
-  // rgb_test();
+  //motor_test();
+  rgb_test();
   // ultasonic_test(); // Führt den Ultraschalltest durch
 }

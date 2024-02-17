@@ -129,6 +129,27 @@ git clone /Users/jan/Mars-Rover.git
 git clone https://github.com/ju1-eu/Mars-Rover.git
 ```
 
+## PlatformIO
+
+```bash
+# VS-Code / PlatformIO / Terminal
+# PlatformIO CLI verwenden, um Arduino - Bibliotheken zu installieren
+pio lib install "Servo"
+pio lib install "SoftPWM"
+# Cache löschen
+pio run -t clean
+
+# Projektordner verschieben
+cd /Users/jan/Documents/PlatformIO/Projects
+mv elektrik_test /Users/jan/PlatformIO/Projects
+# VS-Code / Arbeitsbereich speichern unter / elektrik_test.code-workspace + Alias erstellen
+
+# Erstellen eines Backups
+cd /Users/jan/PlatformIO/Projects
+zip -r Projekt_Backup_elektrik_test.zip elektrik_test/
+mv *.zip /Users/jan/daten/start/IoT/Mars-Rover/Projekte
+```
+
 ## ChatGPT
 
 ChatGPT <https://chat.openai.com/>
