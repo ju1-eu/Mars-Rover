@@ -1,4 +1,4 @@
-% ju 16-Feb-24 README.tex
+% ju 17-Feb-24 README.tex
 \documentclass{vorlage-design-main}
 \usepackage[utf8]{inputenc}
 \usepackage{longtable}
@@ -244,6 +244,28 @@ git push local-bare main
 git clone /Users/jan/Mars-Rover.git
 # Remote-Repository von GitHub klonen
 git clone https://github.com/ju1-eu/Mars-Rover.git
+\end{lstlisting}
+
+\hypertarget{platformio}{%
+\subsection{PlatformIO}\label{platformio}}
+
+\begin{lstlisting}[language=bash]
+# VS-Code / PlatformIO / Terminal
+# PlatformIO CLI verwenden, um Arduino - Bibliotheken zu installieren
+pio lib install "Servo"
+pio lib install "SoftPWM"
+# Cache löschen
+pio run -t clean
+
+# Projektordner verschieben
+cd /Users/jan/Documents/PlatformIO/Projects
+mv elektrik_test /Users/jan/PlatformIO/Projects
+# VS-Code / Arbeitsbereich speichern unter / elektrik_test.code-workspace + Alias erstellen
+
+# Erstellen eines Backups
+cd /Users/jan/PlatformIO/Projects
+zip -r Projekt_Backup_elektrik_test.zip elektrik_test/
+mv *.zip /Users/jan/daten/start/IoT/Mars-Rover/Projekte
 \end{lstlisting}
 
 \hypertarget{chatgpt}{%
