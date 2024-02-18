@@ -29,7 +29,8 @@
     --code-font-size: 1em;
 
     /* Karten */
-    --card-fixed-height: 12em; /* Setzt die Höhe der Inhaltskarten */
+    --card-fixed-height: 12em;
+    /* Setzt die Höhe der Inhaltskarten */
     --card-bg-color: #ffffff;
     --card-border-color: #e0e0e0;
     --card-border-radius: 0.3em;
@@ -50,7 +51,8 @@
 body {
     display: flex;
     justify-content: center;
-    align-items: start; /* Für die Vertikalzentrierung oben */
+    align-items: start;
+    /* Für die Vertikalzentrierung oben */
     font-family: var(--primary-font);
     line-height: 1.6;
     margin: 0;
@@ -72,7 +74,8 @@ body {
 header {
     display: flex;
     justify-content: flex-end;
-    align-items: center;  /* um die Elemente in der Mitte auszurichten */
+    align-items: center;
+    /* um die Elemente in der Mitte auszurichten */
     padding: var(--half-padding) var(--double-padding);
     background-color: var(--primary-bg-color);
     color: var(--secondary-text-color);
@@ -98,41 +101,56 @@ code {
 
 /* Bilder und Tabellen */
 img {
-    max-width: 50%; /* Erlaubt, dass das Bild bis zu seiner maximalen Breite skaliert */
-    height: auto; /* Behält das Seitenverhältnis der Bilder bei */
-    display: block; /* Stellt sicher, dass das Bild als Block angezeigt wird */
-    margin: 0 auto; /* Zentriert das Bild horizontal innerhalb des Containers */
+    max-width: 50%;
+    /* Erlaubt, dass das Bild bis zu seiner maximalen Breite skaliert */
+    height: auto;
+    /* Behält das Seitenverhältnis der Bilder bei */
+    display: block;
+    /* Stellt sicher, dass das Bild als Block angezeigt wird */
+    margin: 0 auto;
+    /* Zentriert das Bild horizontal innerhalb des Containers */
 }
 
 table {
-    border-collapse: collapse; /* Entfernt Zwischenräume zwischen den Zellen */
-    width: 50%; /* Erlaubt, dass die Tabelle bis zu ihrer maximalen Breite skaliert */
-    margin: 20px auto; /* Zentriert die Tabelle horizontal und fügt oben und unten einen Rand hinzu */
+    border-collapse: collapse;
+    /* Entfernt Zwischenräume zwischen den Zellen */
+    width: 50%;
+    /* Erlaubt, dass die Tabelle bis zu ihrer maximalen Breite skaliert */
+    margin: 20px auto;
+    /* Zentriert die Tabelle horizontal und fügt oben und unten einen Rand hinzu */
 }
 
-th, td {
-    border: 1px solid #ddd; /* Fügt einen Rand zu Zellen hinzu */
-    padding: 10px; /* Fügt Innenabstand zu Zellen hinzu */
-    text-align: left; /* Textausrichtung innerhalb der Zellen */
+th,
+td {
+    border: 1px solid #ddd;
+    /* Fügt einen Rand zu Zellen hinzu */
+    padding: 10px;
+    /* Fügt Innenabstand zu Zellen hinzu */
+    text-align: left;
+    /* Textausrichtung innerhalb der Zellen */
 }
 
 th {
-    background-color: #f2f2f2; /* Hintergrundfarbe für Kopfzeilen der Tabelle */
+    background-color: #f2f2f2;
+    /* Hintergrundfarbe für Kopfzeilen der Tabelle */
 }
 
-a, .nav-link {
+a,
+.nav-link {
     text-decoration: none;
     transition: color 0.3s ease, outline 0.3s ease, background-color 0.3s ease;
     padding: 0.2em 0.4em;
     color: var(--link-color);
 }
 
-a:hover, .nav-link:hover {
+a:hover,
+.nav-link:hover {
     color: var(--link-hover-color);
     background-color: var(--secondary-bg-color);
 }
 
-a:focus, .nav-link:focus {
+a:focus,
+.nav-link:focus {
     outline: 3px solid var(--accent-color);
     outline-offset: 3px;
 }
@@ -148,6 +166,7 @@ figure {
     text-align: center;
     margin: 0;
 }
+
 footer {
     display: flex;
     justify-content: center;
@@ -155,7 +174,8 @@ footer {
     padding: var(--base-padding) var(--double-padding);
     background-color: var(--primary-bg-color);
     color: var(--secondary-text-color);
-    align-items: center; /* Fügt vertikale Zentrierung hinzu */
+    align-items: center;
+    /* Fügt vertikale Zentrierung hinzu */
 }
 
 footer nav[role="navigation"] {
@@ -167,7 +187,8 @@ img:hover {
     filter: brightness(var(--image-hover-brightness));
 }
 
-img.responsive, .card-header img {
+img.responsive,
+.card-header img {
     max-width: 100%;
     display: block;
     margin: 0 auto;
@@ -190,26 +211,33 @@ img.responsive, .card-header img {
 
 
 h1 {
-    font-size: 2.5em; /* Große Überschrift für h1 */
+    font-size: 2.5em;
+    /* Große Überschrift für h1 */
     font-weight: bold;
 }
 
 h2 {
-    font-size: 2em; /* Etwas kleiner als h1 */
+    font-size: 2em;
+    /* Etwas kleiner als h1 */
     font-weight: bold;
 }
 
 h3 {
-    font-size: 1.75em; /* Etwas kleiner als h2 */
+    font-size: 1.75em;
+    /* Etwas kleiner als h2 */
     font-weight: bold;
 }
 
-h4, h5, h6 {
-    font-size: 1.5em; /* Kleinste der "großen" Überschriften */
+h4,
+h5,
+h6 {
+    font-size: 1.5em;
+    /* Kleinste der "großen" Überschriften */
     font-weight: bold;
 }
 
 @media (max-width: 768px) {
+
     /* Anpassungen für kleine Bildschirme */
     .container {
         max-width: var(--container-max-width-small);
@@ -220,11 +248,14 @@ h4, h5, h6 {
         font-size: var(--small-font-size);
     }
 
-    header, footer {
+    header,
+    footer {
         padding: var(--half-padding);
     }
+
     h1 {
-        font-size: 2em; /* Kleiner für mobile Ansicht */
+        font-size: 2em;
+        /* Kleiner für mobile Ansicht */
     }
 
     h2 {
@@ -235,13 +266,16 @@ h4, h5, h6 {
         font-size: 1.5em;
     }
 
-    h4, h5, h6 {
+    h4,
+    h5,
+    h6 {
         font-size: 1.25em;
     }
 }
 
 
 @media (min-width: 769px) {
+
     /* Weitere Anpassungen für große Bildschirme ... */
     .container {
         max-width: var(--container-max-width-large);
@@ -252,7 +286,8 @@ h4, h5, h6 {
         font-size: var(--base-font-size);
     }
 
-    header, footer {
+    header,
+    footer {
         padding: var(--base-padding);
     }
 }

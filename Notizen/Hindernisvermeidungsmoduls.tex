@@ -1,0 +1,482 @@
+% ju 18-Feb-24 Hindernisvermeidungsmoduls.tex
+\documentclass{vorlage-design-main}
+\usepackage[utf8]{inputenc}
+\usepackage{longtable}
+\usepackage{blindtext,alltt}
+%% Ganze Überschrift
+\title{Thema}
+
+%% Kürzerer Titel zur Verwendung im Seitenkopf
+\runningtitle{Kurztitel}
+\author{Jan Unger}
+% \author{2.}
+\date{\today}
+
+%% Die .bib-Datei mit vollständigen Referenzen zur Verwendung mit biblatex. articleclass lädt das Paket biblatex-chicago mit Anpassungen
+\addbibresource{literatur.bib}
+
+\begin{document}
+
+\maketitle
+
+\begin{abstract}
+
+\end{abstract}
+
+\hypertarget{erkundung-des-hindernisvermeidungsmoduls}{%
+\subsection{Erkundung des
+Hindernisvermeidungsmoduls}\label{erkundung-des-hindernisvermeidungsmoduls}}
+
+\hypertarget{pin-belegung-infrarot-hindernisvermeidungsmodul}{%
+\subsubsection{Pin-belegung
+Infrarot-Hindernisvermeidungsmodul}\label{pin-belegung-infrarot-hindernisvermeidungsmodul}}
+
+\begin{itemize}
+
+\item
+  \textbf{GND (Ground):} Dient als gemeinsamer Bezugspunkt für die
+  Stromversorgung und das Signal des Moduls, essentiell für die
+  Stabilität und Funktionalität des Schaltkreises.
+\item
+  \textbf{+ (VCC):} Die Stromversorgungsleitung, die typischerweise
+  zwischen 3,3V und 5V DC liegt. Die Flexibilität in der Stromversorgung
+  macht das Modul kompatibel mit einer Vielzahl von Mikrocontrollern und
+  Entwicklungsboards.
+\item
+  \textbf{Out (Output):} Dieser Pin liefert das Signal, das den Zustand
+  der Hinderniserkennung anzeigt. Ein hoher Pegel signalisiert keine
+  Hindernisse, während ein niedriger Pegel die Erkennung eines Objekts
+  anzeigt. Diese binäre Signalübertragung ermöglicht eine direkte
+  Integration in Logikschaltungen und Mikrocontroller-Inputs.
+\item
+  \textbf{EN (Enable):} Ermöglicht die Aktivierung oder Deaktivierung
+  des Moduls. Eine direkte Verbindung mit GND bedeutet eine ständige
+  Aktivierung des Moduls. Die Möglichkeit, diesen Pin zu steuern,
+  eröffnet erweiterte Anwendungsgebiete, in denen die Sensortätigkeit
+  programmatisch umgeschaltet werden soll.
+\end{itemize}
+
+\hypertarget{arbeitsprinzip-des-infrarot-hindernisvermeidungsmoduls}{%
+\subsubsection{Arbeitsprinzip des
+Infrarot-Hindernisvermeidungsmoduls}\label{arbeitsprinzip-des-infrarot-hindernisvermeidungsmoduls}}
+
+Das Herzstück des Moduls bilden ein Infrarot-Sender und -Empfänger, die
+zusammenarbeiten, um die Präsenz und Distanz von Objekten zu
+detektieren. Der Sender emittiert kontinuierlich Infrarotstrahlung, die
+vom Empfänger detektiert wird, wenn sie von einem Hindernis reflektiert
+wird. Diese Art der Reflexion ermöglicht eine präzise
+Hinderniserkennung.
+
+\hypertarget{stuxf6runterdruxfcckung-und-einfluss-der-objektfarbe}{%
+\subsubsection{Störunterdrückung und Einfluss der
+Objektfarbe}\label{stoerunterdrueckung-und-einfluss-der-objektfarbe}}
+
+Die Effektivität der Hinderniserkennung kann durch die
+Oberflächenbeschaffenheit und Farbe des Objekts beeinflusst werden.
+Dunkle Farben absorbieren Infrarotlicht stärker, wodurch die Reflexion
+minimiert und die Erkennungsdistanz reduziert wird. Helle Oberflächen,
+insbesondere Weiß, reflektieren Infrarotstrahlung effizienter, was die
+maximale Erkennungsdistanz des Moduls erhöht.
+
+\hypertarget{auslesen-der-2-module}{%
+\subsubsection{Auslesen der 2 Module}\label{auslesen-der-2-module}}
+
+\begin{enumerate}
+\def\labelenumi{\arabic{enumi}.}
+
+\item
+  \textbf{Initialisierung:}
+
+  \begin{itemize}
+  
+  \item
+    Die Pins für die IR-Module werden als Eingänge konfiguriert, um die
+    Signale der Infrarot-Sensoren lesen zu können.
+  \item
+    Die serielle Kommunikation ermöglicht die Übertragung der
+    Sensorwerte an den Computer zur Anzeige im seriellen Monitor.
+  \end{itemize}
+\item
+  \textbf{Hauptprogrammschleife (loop):}
+
+  \begin{itemize}
+  
+  \item
+    Die digitalen Werte der beiden IR-Module werden gelesen. Diese Werte
+    geben an, ob ein Hindernis erkannt wurde
+    (\verb|0|) oder nicht
+    (\verb|1|).
+  \item
+    Die gelesenen Werte werden über den seriellen Port ausgegeben. Für
+    jedes Modul wird angegeben, ob ein Hindernis vorliegt oder nicht.
+  \item
+    Das Programm wartet 200 Millisekunden
+    (\verb|delay(200)|), um die Lesbarkeit der
+    ausgegebenen Werte zu verbessern und eine kontinuierliche Flut von
+    Daten zu vermeiden.
+  \end{itemize}
+\end{enumerate}
+
+\hypertarget{beschreibung-des-programmflusses}{%
+\subsubsection{Beschreibung des
+Programmflusses}\label{beschreibung-des-programmflusses}}
+
+\textbf{Programmfluss} - Visualisieren in einem Flussdiagramm
+
+\begin{itemize}
+
+\item
+  \textbf{Setup-Phase:}
+
+  \begin{itemize}
+  
+  \item
+    \textbf{PIN-Modus einstellen:} Zuerst werden die Pins, an denen die
+    IR-Sensoren angeschlossen sind, als Eingänge
+    (\verb|INPUT|) definiert. Dies ist notwendig,
+    damit der Arduino die von den Sensoren kommenden Signale lesen kann.
+  \item
+    \textbf{Serielle Kommunikation starten:} Anschließend wird die
+    serielle Kommunikation initialisiert, was für die Datenübertragung
+    zum Computer erforderlich ist. Die Baudrate von 115200 wird gewählt,
+    da sie eine gängige Rate für viele Arduino-Projekte darstellt und
+    eine ausreichende Übertragungsgeschwindigkeit bietet.
+  \end{itemize}
+\item
+  \textbf{Loop-Phase:}
+
+  \begin{itemize}
+  
+  \item
+    \textbf{Sensorwerte lesen:} In jedem Durchlauf der Hauptschleife
+    (\verb|loop|) werden die digitalen Signale der
+    IR-Sensoren gelesen. Diese Signale zeigen an, ob die Sensoren ein
+    Hindernis vor sich wahrnehmen.
+  \item
+    \textbf{Werte ausgeben:} Die gelesenen Werte werden dann zusammen
+    mit einer beschreibenden Nachricht über den seriellen Port
+    ausgegeben. Diese Ausgabe ermöglicht es dem Benutzer, die
+    Sensorwerte in Echtzeit zu überwachen.
+  \item
+    \textbf{Verzögerung einfügen:} Zwischen den Ausgaben wird eine kurze
+    Verzögerung eingefügt, um die Ausgabe im seriellen Monitor lesbarer
+    zu machen und dem Benutzer Zeit zu geben, die Informationen zu
+    verarbeiten.
+  \end{itemize}
+\end{itemize}
+
+\newpage
+
+\begin{lstlisting}[language={C++}]
+// Definiere die Pins für die IR-Module
+#define IR_RIGHT 7
+#define IR_LEFT 8
+
+void setup() {
+  // Setze die Pins der IR-Module als Eingänge
+  pinMode(IR_RIGHT, INPUT);
+  pinMode(IR_LEFT, INPUT);
+
+  // Beginne die serielle Kommunikation
+  Serial.begin(115200);
+}
+
+void loop() {
+  // Lese die Werte von den IR-Modulen
+  int rightValue = digitalRead(IR_RIGHT);
+  int leftValue = digitalRead(IR_LEFT);
+
+  // Ausgabe auf den seriellen Monitor
+  Serial.print("Rechter IR: ");
+  Serial.println(rightValue);
+  Serial.print("Linker IR: ");
+  Serial.println(leftValue);
+
+  // Warte kurz, um die Lesbarkeit zu verbessern
+  delay(200);
+}
+\end{lstlisting}
+
+\hypertarget{anpassen-der-erkennungsdistanz}{%
+\subsubsection{Anpassen der
+Erkennungsdistanz}\label{anpassen-der-erkennungsdistanz}}
+
+\begin{itemize}
+
+\item
+  \textbf{Bedeutung der Anpassung:}
+
+  \begin{itemize}
+  
+  \item
+    Die voreingestellten Erkennungsdistanzen der Infrarotmodule sind
+    möglicherweise nicht ideal für alle Umgebungen.
+  \item
+    Zu kurze Distanzen könnten zu Kollisionen mit Hindernissen führen.
+  \item
+    Zu weite Distanzen könnten unnötige Ausweichmanöver verursachen,
+    selbst wenn Hindernisse noch weit entfernt sind.
+  \end{itemize}
+\item
+  \textbf{Anpassungsprozess:}
+
+  \begin{enumerate}
+  \def\labelenumi{\arabic{enumi}.}
+  
+  \item
+    \textbf{Rechtes Hindernisvermeidungsmodul justieren:}
+
+    \begin{itemize}
+    
+    \item
+      Überprüfe das Modul auf eventuelle Fehlausrichtungen durch
+      Transportstöße und richte es gegebenenfalls gerade.
+    \item
+      Platziere ein Hindernis (z.B. die Verpackungsbox des Rover-Kits)
+      etwa 20 cm vor dem Modul und 30°.
+    \item
+      Drehe das Potentiometer am Modul, bis die Anzeigeleuchte aktiv
+      wird.
+    \item
+      Teste die Einstellung, indem du das Hindernis bewegst, um die
+      Genauigkeit der Erkennung zu überprüfen. Stelle bei Bedarf das
+      andere Potentiometer ein.
+    \end{itemize}
+  \item
+    \textbf{Linkes Hindernisvermeidungsmodul justieren:}
+
+    \begin{itemize}
+    
+    \item
+      Wiederhole den gleichen Prozess wie beim rechten Modul, um eine
+      konsistente Erkennungsdistanz zu gewährleisten.
+    \end{itemize}
+  \end{enumerate}
+\end{itemize}
+
+\hypertarget{entwurf-eines-automatischen-hindernisvermeidungssystems}{%
+\subsubsection{Entwurf eines automatischen
+Hindernisvermeidungssystems}\label{entwurf-eines-automatischen-hindernisvermeidungssystems}}
+
+\textbf{Programmfluss} steuert einen Rover mithilfe von
+Infrarot-Hindernisvermeidungsmodulen und SoftPWM zur
+Geschwindigkeitsregelung. Der Rover kann vorwärts, rückwärts, nach
+rechts und nach links navigieren, abhängig von den Signalen der
+IR-Sensoren. Hier ist eine Zusammenfassung des Programmflusses:
+
+\begin{enumerate}
+\def\labelenumi{\arabic{enumi}.}
+
+\item
+  \textbf{Initialisierung:}
+
+  \begin{itemize}
+  
+  \item
+    Die \verb|SoftPWM| Bibliothek wird initialisiert,
+    um eine präzise Geschwindigkeitskontrolle der Motoren zu
+    ermöglichen.
+  \item
+    Die Pins für die IR-Sensoren werden als Eingänge konfiguriert, um
+    die Hinderniserkennung zu ermöglichen.
+  \end{itemize}
+\item
+  \textbf{Hauptprogrammschleife (loop):}
+
+  \begin{itemize}
+  
+  \item
+    Die Werte von beiden IR-Sensoren (rechts und links) werden gelesen.
+  \item
+    Basierend auf den gelesenen Werten der IR-Sensoren entscheidet das
+    Programm, in welche Richtung der Rover bewegt werden soll:
+
+    \begin{itemize}
+    
+    \item
+      Wenn der Weg rechts blockiert ist
+      (\verb|rightValue == 0| und
+      \verb|leftValue == 1|), dreht der Rover nach
+      hinten rechts.
+    \item
+      Wenn der Weg links blockiert ist
+      (\verb|rightValue == 1| und
+      \verb|leftValue == 0|), dreht der Rover nach
+      hinten links.
+    \item
+      Wenn beide Wege blockiert sind
+      (\verb|rightValue == 0| und
+      \verb|leftValue == 0|), bewegt sich der Rover
+      rückwärts.
+    \item
+      Wenn beide Wege frei sind, bewegt sich der Rover vorwärts.
+    \end{itemize}
+  \end{itemize}
+\item
+  \textbf{Bewegungsfunktionen:}
+
+  \begin{itemize}
+  
+  \item
+    \verb|moveBackward(int speed)|: Setzt die Motoren
+    so, dass der Rover rückwärts fährt.
+  \item
+    \verb|moveForward(int speed)|: Setzt die Motoren
+    so, dass der Rover vorwärts fährt.
+  \item
+    \verb|backRight(int speed)|: Dreht den Rover nach
+    hinten rechts.
+  \item
+    \verb|backLeft(int speed)|: Dreht den Rover nach
+    hinten links.
+  \end{itemize}
+\end{enumerate}
+
+Jede Bewegungsfunktion nimmt eine Geschwindigkeit
+(\verb|speed|) als Parameter, die mittels
+\verb|SoftPWMSet()| auf die entsprechenden Motorpins
+angewendet wird, um die Motoren in die gewünschte Richtung zu drehen.
+
+\newpage
+
+\textbf{Visualisieren in einem Flussdiagramm} bei einem Wert von 0 wird
+ein Hindernis angenommen, und der Rover reagiert entsprechend, um
+Kollisionen zu vermeiden.
+
+\begin{lstlisting}
+                          +-------------------+
+                          |  IR-Sensorwerte   |
+                          |  prüfen           |
+                          +---------+---------+
+                                    |
+                   +----------------v----------------+
+                   | Links | Rechts |   Aktion       |
+                   +---------------------------------+
+                   |   0   |   1    |  backRight(150)|
+                   +---------------------------------+
+                   |   1   |   0    |  backLeft(150) |
+                   +---------------------------------+
+                   |   0   |   0    | moveBackward(150)|
+                   +---------------------------------+
+                   | sonst | sonst  | moveForward(150)|
+                   +---------------------------------+
+\end{lstlisting}
+
+\newpage
+
+\begin{lstlisting}[language={C++}]
+/**
+ * @file main.cpp
+ * @brief Entwurf eines automatischen Hindernisvermeidungssystems mit 2x Infarotsensoren
+ */
+#include <Arduino.h>
+#include <SoftPWM.h>
+
+// Definition der Pins für die linken Motoren A, B, C
+#define LEFT_MOTOR_FORWARD_PIN 2 // Pin für Vorwärtsbewegung der linken Motoren (A, B, C)
+#define LEFT_MOTOR_REVERSE_PIN 3 // Pin für Rückwärtsbewegung der linken Motoren (A, B, C)
+
+// Definition der Pins für die rechten Motoren D, E, F
+#define RIGHT_MOTOR_FORWARD_PIN 5 // Pin für Vorwärtsbewegung der rechten Motoren (D, E, F)
+#define RIGHT_MOTOR_REVERSE_PIN 4 // Pin für Rückwärtsbewegung der rechten Motoren (D, E, F)
+
+// Definition der Pins für die IR-Module
+#define IR_RIGHT 7
+#define IR_LEFT 8
+
+// Zustandskonstanten für die IR-Sensoren
+#define OBSTACLE 0
+#define CLEAR 1
+
+void moveBackward(int speed);
+void moveForward(int speed);
+void backRight(int speed);
+void backLeft(int speed);
+
+void setup() {
+  // Initialisiere SoftPWM
+  SoftPWMBegin();
+
+  // Setze die Pins der IR-Module als Eingänge
+  pinMode(IR_RIGHT, INPUT);
+  pinMode(IR_LEFT, INPUT);
+
+  // Konfiguriere Motorpins als Ausgänge
+  pinMode(LEFT_MOTOR_FORWARD_PIN, OUTPUT);
+  pinMode(LEFT_MOTOR_REVERSE_PIN, OUTPUT);
+  pinMode(RIGHT_MOTOR_FORWARD_PIN, OUTPUT);
+  pinMode(RIGHT_MOTOR_REVERSE_PIN, OUTPUT);
+}
+
+void loop() {
+  // Lese Werte von den IR-Sensoren
+  int rightValue = digitalRead(IR_RIGHT);
+  int leftValue = digitalRead(IR_LEFT);
+
+  // Steuere die Bewegungen des Rovers basierend auf den Werten der IR-Sensoren
+  if (rightValue == OBSTACLE && leftValue == CLEAR) {  // Weg rechts blockiert
+    backRight(70);
+  } else if (rightValue == CLEAR && leftValue == OBSTACLE) {  // Weg links blockiert
+    backLeft(70);
+  } else if (rightValue == OBSTACLE && leftValue == OBSTACLE) {  // Beide Wege blockiert
+    moveBackward(70);
+  } else {  // Wege frei
+    moveForward(70);
+  }
+
+  delay(100); // Einfache Entprellungsverzögerung
+}
+
+void moveBackward(int speed) {
+  SoftPWMSet(LEFT_MOTOR_REVERSE_PIN, speed);
+  SoftPWMSet(RIGHT_MOTOR_REVERSE_PIN, speed);
+  SoftPWMSet(LEFT_MOTOR_FORWARD_PIN, 0);
+  SoftPWMSet(RIGHT_MOTOR_FORWARD_PIN, 0);
+}
+
+void moveForward(int speed) {
+  SoftPWMSet(LEFT_MOTOR_FORWARD_PIN, speed);
+  SoftPWMSet(RIGHT_MOTOR_FORWARD_PIN, speed);
+  SoftPWMSet(LEFT_MOTOR_REVERSE_PIN, 0);
+  SoftPWMSet(RIGHT_MOTOR_REVERSE_PIN, 0);
+}
+
+void backRight(int speed) {
+  SoftPWMSet(LEFT_MOTOR_REVERSE_PIN, speed);
+  SoftPWMSet(RIGHT_MOTOR_FORWARD_PIN, 0);
+  SoftPWMSet(LEFT_MOTOR_FORWARD_PIN, 0);
+  SoftPWMSet(RIGHT_MOTOR_REVERSE_PIN, 0);
+}
+
+void backLeft(int speed) {
+  SoftPWMSet(RIGHT_MOTOR_REVERSE_PIN, speed);
+  SoftPWMSet(LEFT_MOTOR_FORWARD_PIN, 0);
+  SoftPWMSet(RIGHT_MOTOR_FORWARD_PIN, 0);
+  SoftPWMSet(LEFT_MOTOR_REVERSE_PIN, 0);
+}
+\end{lstlisting}
+
+\hypertarget{reflexion-infarotsensor}{%
+\subsubsection{Reflexion Infarotsensor}\label{reflexion-infarotsensor}}
+
+\begin{itemize}
+\item
+  Beobachten Sie, ob sich der Rover so bewegt, wie Sie es erwartet
+  haben.
+\item
+  Oder setzen Sie ihn verschiedenen Lichtverhältnissen aus, um zu sehen,
+  wie sich seine Bewegungen ändern.
+\item
+  Während er geschickt Hindernissen zu seiner Linken und Rechten
+  ausweicht, könnte er Schwierigkeiten haben, kleinere Hindernisse
+  direkt vor ihm zu erkennen. Wie können wir diese Herausforderung
+  meistern?
+\end{itemize} % Platzhalter
+
+%% Optional Anhang
+%\clearpage
+%\appendix
+
+\clearpage
+\printbibliography
+\end{document}

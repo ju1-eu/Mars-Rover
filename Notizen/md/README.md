@@ -155,6 +155,9 @@ mv *.zip /Users/jan/daten/start/IoT/Mars-Rover/Projekte
 ChatGPT <https://chat.openai.com/>
 
 ```markdown
+# Informationsfluss
+Visualisiere in einem Flussdiagramm (ASCII)
+
 # Für C- oder C++-Projekte wird oft der JavaDoc-Stil empfohlen
 Erstelle Code mit Doxygen-kompatiblen Kommentaren
 

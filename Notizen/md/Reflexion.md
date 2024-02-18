@@ -707,14 +707,13 @@ Ein Mol ist eine Maßeinheit in der Chemie, die verwendet wird, um die Menge ein
 
 Um zu veranschaulichen, wie groß diese Zahl ist, hier ein sinnvoller Vergleich:
 
-Stellen Sie sich vor, Sie könnten jeden Tag eine Milliarde (1 Milliarde = $10^9$) Sandkörner zählen. Wenn Sie jeden Tag ohne Pause zählen würden, bräuchten Sie über 19.000 Jahre, um ein Mol Sandkörner zu zählen. 
+Stellen Sie sich vor, Sie könnten jeden Tag eine Milliarde (1 Milliarde = $10^9$) Sandkörner zählen. Wenn Sie jeden Tag ohne Pause zählen würden, bräuchten Sie über 19.000 Jahre, um ein Mol Sandkörner zu zählen.
 
 Ein anderes Beispiel: Wäre jedes Teilchen in einem Mol ein Millimeter groß, würde die lineare Kette dieser Teilchen, aneinandergereiht, eine Strecke von etwa 600 Millionen Kilometern zurücklegen, was ungefähr der 1500-fachen Entfernung von der Erde zum Mond entspricht.
 
 Diese Beispiele zeigen, dass die Menge, die ein Mol repräsentiert, in einem alltäglichen Kontext unvorstellbar groß ist, aber in der Chemie und Physik eine grundlegende Einheit für die Quantifizierung von Stoffmengen darstellt.
 
 ### Stoffmenge, Avogadro-Zahl und Entitäten
-
 
 #### Stoffmenge
 
@@ -794,7 +793,7 @@ In 1 ml Wasser sind etwa 0.0555 Mol Wasser enthalten. Dies bedeutet, dass in ein
 
 ### Wie viele Aluminium (Al) Atome sind in 1 g Aluminiumfolie enthalten?
 
-Um zu berechnen, wie viele Aluminium (Al) Atome in 1 g Aluminiumfolie enthalten sind, benötigen wir die molare Masse von Aluminium und die Avogadro-Zahl. Die molare Masse von Aluminium beträgt etwa 26.98 g/mol. 
+Um zu berechnen, wie viele Aluminium (Al) Atome in 1 g Aluminiumfolie enthalten sind, benötigen wir die molare Masse von Aluminium und die Avogadro-Zahl. Die molare Masse von Aluminium beträgt etwa 26.98 g/mol.
 
 #### Berechnung der Stoffmenge in 1 g Aluminiumfolie
 
@@ -835,21 +834,20 @@ stoffmenge_aluminium_mol, anzahl_aluminium_atome
 
 In 1 g Aluminiumfolie sind etwa $2.23 \times 10^{22}$ Aluminium-Atome enthalten, basierend auf einer Stoffmenge von etwa 0.037 Mol.
 
-
 - **Gewicht von 3 Mol Wasser**: Das Gewicht von 3 Mol Wasser beträgt etwa $3 \times 18.015 \, \text{g/mol} = 54.045 \, \text{g}$.
 - **Gase und Molares Volumen**: Bei Standardbedingungen nimmt 1 Mol eines idealen Gases ein Volumen von etwa 22.4 Litern ein.
 - **Umrechnungsfaktor g in u**: Die Umrechnung von Gramm in atomare Masseneinheiten (u) hängt von der molaren Masse der Substanz ab, wobei 1 g/mol der Masse von $6.022 \times 10^{23}$ Teilchen (entspricht der Avogadro-Zahl) in atomaren Masseneinheiten entspricht.
 
-### Atommasse und molare Masse von Wasser 
+### Atommasse und molare Masse von Wasser
 
 Die Atommasse oder molare Masse von Wasser (H2O) setzt sich aus den Atommassen der beteiligten Elemente zusammen: Wasserstoff (H) und Sauerstoff (O). Wasser ist jedoch eine molekulare Verbindung, daher ist die korrekte Bezeichnung hier "molare Masse".
 
-#### Atommasse der Elemente:
+#### Atommasse der Elemente
 
 - Wasserstoff (H) hat eine Atommasse von etwa 1 u pro Atom.
 - Sauerstoff (O) hat eine Atommasse von etwa 16 u pro Atom.
 
-#### Molare Masse von Wasser (H2O):
+#### Molare Masse von Wasser (H2O)
 
 Die molare Masse von Wasser berechnet sich aus der Summe der molaren Massen seiner Atome: 2 Atome Wasserstoff und 1 Atom Sauerstoff.
 
@@ -857,9 +855,9 @@ $\text{Molare Masse H2O} = 2(\text{Atommasse H}) + \text{Atommasse O}$
 
 $\text{Molare Masse H2O} = 2(1 \, \text{u}) + 16 \, \text{u} = 18 \, \text{u}$
 
-#### Umrechnung in Gramm:
+#### Umrechnung in Gramm
 
-Da die molare Masse in Gramm pro Mol (g/mol) angibt, wie viel 1 Mol der Substanz wiegt, entspricht die molare Masse von Wasser (18 u) direkt 18 g/mol. Dies bedeutet, dass 1 Mol Wasser, welches $6.022 \times 10^{23}$ Moleküle enthält, etwa 18 Gramm wiegt. 
+Da die molare Masse in Gramm pro Mol (g/mol) angibt, wie viel 1 Mol der Substanz wiegt, entspricht die molare Masse von Wasser (18 u) direkt 18 g/mol. Dies bedeutet, dass 1 Mol Wasser, welches $6.022 \times 10^{23}$ Moleküle enthält, etwa 18 Gramm wiegt.
 
 Zusammengefasst:
 
@@ -892,7 +890,6 @@ masse_h2_in_gramm
 
 Die Masse eines Wasserstoffmoleküls (H2) beträgt etwa $3.32 \times 10^{-24}$ Gramm. Dies verdeutlicht, wie extrem gering die Masse einzelner Moleküle ist, was die Verwendung von Mol und molaren Massen in der Chemie für praktische Berechnungen notwendig macht.
 
-
 ### Masse eines einzelnen Moleküls Wasser (H2O) in Gramm berechnen
 
 Die molare Masse von Wasser (H2O) ist etwa 18 u (oder 18 g/mol), was bedeutet, dass ein Molekül H2O eine Masse von 18 u hat.
@@ -905,21 +902,19 @@ Diese Berechnung gibt die Masse eines einzelnen Moleküls H2O in Gramm an. Lasse
 
 Die Masse eines einzelnen Moleküls Wasser (H2O) beträgt etwa $2.99 \times 10^{-23}$ Gramm. Diese Zahl verdeutlicht erneut, wie winzig die Masse einzelner Moleküle ist, was die Bedeutung von Mol und molaren Massen in der Chemie für die Handhabung und Berechnung von Substanzmengen unterstreicht.
 
-
 ### Wie weinzig klein ist die Masse eines einzelnen Moleküls Wasser (H2O)?
 
 Die Masse eines einzelnen Moleküls Wasser (H2O), die etwa $2.99 \times 10^{-23}$ Gramm beträgt, ist so winzig, dass sie sich unserer alltäglichen Vorstellungskraft entzieht. Um zu veranschaulichen, wie klein diese Zahl ist, kann ein Vergleich mit einem Alltagsgegenstand hilfreich sein:
 
-Stellen Sie sich vor, Sie hätten eine Münze, die etwa 5 Gramm wiegt. Die Masse eines Wasser-Moleküls im Vergleich zur Masse der Münze ist so, als ob man die Münze mit der gesamten Erdmasse (ungefähr $6 \times 10^{24}$ kg) vergleicht. In diesem Vergleich wäre das Wasser-Molekül ähnlich zur Masse der Münze, während die gesamte Erde die Masse der 5-Gramm-Münze repräsentieren würde. 
+Stellen Sie sich vor, Sie hätten eine Münze, die etwa 5 Gramm wiegt. Die Masse eines Wasser-Moleküls im Vergleich zur Masse der Münze ist so, als ob man die Münze mit der gesamten Erdmasse (ungefähr $6 \times 10^{24}$ kg) vergleicht. In diesem Vergleich wäre das Wasser-Molekül ähnlich zur Masse der Münze, während die gesamte Erde die Masse der 5-Gramm-Münze repräsentieren würde.
 
-Ein anderer Weg, dies zu betrachten, ist: Wenn man die Masse eines Wasser-Moleküls auf die Masse einer Münze "skalieren" würde, dann bräuchte man ungefähr $1.67 \times 10^{23}$ Wasser-Moleküle, um 5 Gramm zu erreichen, was der Anzahl der Moleküle in etwa 0.083 Mol Wasser entspricht. 
+Ein anderer Weg, dies zu betrachten, ist: Wenn man die Masse eines Wasser-Moleküls auf die Masse einer Münze "skalieren" würde, dann bräuchte man ungefähr $1.67 \times 10^{23}$ Wasser-Moleküle, um 5 Gramm zu erreichen, was der Anzahl der Moleküle in etwa 0.083 Mol Wasser entspricht.
 
 Um die Kleinheit eines Moleküls weiter zu verdeutlichen: Wenn man jedes Wasser-Molekül als 1 mm³ (ein winziger Würfel mit 1 mm Kantenlänge) darstellen könnte, und man würde diese Würfel aneinanderreihen, um die Masse von 5 Gramm Wasser zu repräsentieren, würde diese Linie eine Länge von etwa 3 Billionen Kilometern haben, fast 20-mal die Entfernung von der Erde zur Sonne und zurück.
 
 Diese Vergleiche verdeutlichen die unglaubliche Kleinheit molekularer Massen und die Nützlichkeit des Mol-Konzepts in der Chemie, um mit solch winzigen Massen in praktischen und verständlichen Größenordnungen zu arbeiten.
 
 ### Zusammenfassung
-
 
 #### Stoffmenge Formel
 
@@ -992,7 +987,6 @@ Die angegebenen Werte für den Druck auf verschiedenen Höhen sind Näherungswer
 
 ### Entfernungen zwischen Erde, Mond und Mars veranschaulichen
 
-
 #### Erde - Mond
 
 Die durchschnittliche Entfernung vom Erdmittelpunkt zum Mond beträgt etwa 384.400 km. Stellen Sie sich vor, Sie könnten mit einem Auto, das konstant 100 km/h fährt, diese Strecke zurücklegen. Ohne Pausen zu machen, bräuchten Sie etwa 160 Tage, um vom Erdmittelpunkt zum Mond zu gelangen.
@@ -1015,17 +1009,21 @@ Diese Vergleiche zeigen, dass selbst die nächstgelegenen Himmelskörper in unse
 Die Reisezeit zum Mond oder Mars mit einem Raumschiff hängt von verschiedenen Faktoren ab, einschließlich der Art des Antriebssystems, der Flugbahn und der aktuellen Position der Planeten. Hier sind einige Richtwerte und spezifische Details zur Mars-Mission "Perseverance".
 
 #### Reise zum Mond
+
 Mit aktuellen Raketenantrieben dauert eine Mission zum Mond typischerweise etwa 3 Tage. Die Apollo-Missionen der NASA in den 1960er und 1970er Jahren benötigten durchschnittlich etwa 3 Tage, um vom Erdorbit zum Mond zu gelangen.
 
 #### Reise zum Mars
+
 Die Reisezeit zum Mars kann erheblich variieren, typischerweise zwischen 6 und 9 Monaten, abhängig von der gewählten Flugbahn (Hohmann-Transferbahn oder schnellere, aber treibstoffintensivere Routen) und dem Startfenster.
 
 #### Perseverance Mars Rover (2021)
+
 - **Reisedauer**: Die Mission "Perseverance" startete am 30. Juli 2020 und landete am 18. Februar 2021 auf dem Mars. Die Reise dauerte also etwa 7 Monate.
 - **Mission**: Die Hauptziele der Perseverance-Mission umfassen die Suche nach Zeichen vergangenen mikrobiellen Lebens, die Charakterisierung des Klimas und der Geologie des Mars, die Sammlung von Proben für eine mögliche Rückführung zur Erde in der Zukunft und die Vorbereitung für menschliche Erkundungen. Der Rover trägt Instrumente, um diese Ziele zu unterstützen, einschließlich Kameras, Spektrometer und ein Wetterstation.
 - Zusätzlich brachte Perseverance den kleinen Helikopter "Ingenuity" mit, der als Technologiedemonstration dient, um die Machbarkeit des Fliegens in der Marsatmosphäre zu testen.
 
 #### Unterschiede zwischen bemannten und unbemannten Raumflügen
+
 Es gibt wesentliche Unterschiede zwischen bemannten und unbemannten Raumflügen, vor allem in Bezug auf Design, Kosten und Risiko.
 
 - **Design**: Bemannte Missionen erfordern lebenserhaltende Systeme, größere Lebensraummodule und Sicherheitssysteme, um die Astronauten zu schützen, was zu größeren und komplexeren Raumschiffen führt. Unbemannte Missionen können auf diese Systeme verzichten, wodurch sie leichter, kleiner und flexibler in Bezug auf die Nutzlastgestaltung sind.
