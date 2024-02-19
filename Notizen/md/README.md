@@ -155,8 +155,14 @@ mv *.zip /Users/jan/daten/start/IoT/Mars-Rover/Projekte
 ChatGPT <https://chat.openai.com/>
 
 ```markdown
-# Informationsfluss
-Visualisiere in einem Flussdiagramm (ASCII)
+# Keywords
+Erstelle Schlüsselbegriffe und ihre Bedeutungen für das Verständnis der Funktionsweise des Codes
+
+# Flussdiagramm für eine Programmlogik
+"Ich hätte gerne ein Flussdiagramm in ASCII-Art (oder als Beschreibung für eine grafische Darstellung), das die Hauptlogik und den Datenfluss meines Programms verdeutlicht. Besonders interessiert mich, wie Entscheidungen getroffen werden und wie Daten zwischen den Funktionen fließen. Das Programm beinhaltet Funktionen zur Datenverarbeitung, Fehlerbehandlung und Benutzerinteraktion. Könnten Sie bitte die Schlüsselabläufe visualisieren, insbesondere wie das Programm auf Eingaben reagiert und wie es zu verschiedenen Ausgaben kommt? Ich bin auch an der Darstellung von Schleifen und bedingten Anweisungen interessiert. Falls nötig, hier sind einige Begriffe, die in meinem Programm verwendet werden: [...Begriffe einfügen]."
+
+# Beschreibung für eine Programmlogik
+"Ich hätte gerne eine Beschreibung, das die Hauptlogik und den Datenfluss meines Programms verdeutlicht. Besonders interessiert mich, wie Entscheidungen getroffen werden und wie Daten zwischen den Funktionen fließen. Das Programm beinhaltet Funktionen zur Datenverarbeitung, Fehlerbehandlung und Benutzerinteraktion. Könnten Sie bitte die Schlüsselabläufe visualisieren, insbesondere wie das Programm auf Eingaben reagiert und wie es zu verschiedenen Ausgaben kommt? Ich bin auch an der Darstellung von Schleifen und bedingten Anweisungen interessiert. Falls nötig, hier sind einige Begriffe, die in meinem Programm verwendet werden: [...Begriffe einfügen]."
 
 # Für C- oder C++-Projekte wird oft der JavaDoc-Stil empfohlen
 Erstelle Code mit Doxygen-kompatiblen Kommentaren
