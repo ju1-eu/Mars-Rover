@@ -23,7 +23,9 @@ pandoc Hindernisvermeidung-Folgesystem.md -o Hindernisvermeidung-Folgesystem.htm
 
 ## Erstellung eines fortgeschrittenen Hindernisvermeidungssystems
 
-### Keywords fortgeschrittenen Hindernisvermeidungssystems
+### Version 1 Hindernisvermeidungssystems
+
+#### Keywords fortgeschrittenen Hindernisvermeidungssystems
 
 - **SoftPWM**: Eine Bibliothek, die softwarebasierte Pulsweitenmodulation (PWM) auf Arduino-Pins ermöglicht. Dies wird verwendet, um die Geschwindigkeit der Motoren zu steuern.
 
@@ -53,11 +55,13 @@ pandoc Hindernisvermeidung-Folgesystem.md -o Hindernisvermeidung-Folgesystem.htm
 
 - **readSensorData()**: Liest die Entfernungswerte vom Ultraschallsensor und berechnet die Distanz zu einem Objekt basierend auf der Zeitdauer des Echo-Signals.
 
-### Initialisierung
+#### Beschreibung Version 1 Hindernisvermeidungssystems
+
+##### Initialisierung
 
 - Das Programm beginnt mit der **Initialisierung** der Sensoren und Motoren im `setup()`-Teil. Hier werden die Pins für die Ultraschall- und Infrarotsensoren sowie für die Motorsteuerung konfiguriert. Die serielle Kommunikation wird ebenfalls gestartet, um Debugging-Informationen zu übertragen.
 
-### Hauptlogik im loop()
+##### Hauptlogik im loop()
 
 - Im Hauptteil des Programms, innerhalb der `loop()`-Funktion, erfolgt die kontinuierliche Überwachung der **Infrarotsensoren**. Diese Sensoren detektieren, ob Hindernisse auf der rechten oder linken Seite des Rovers vorhanden sind.
 - Basierend auf den Eingaben der Infrarotsensoren, trifft das Programm
@@ -69,27 +73,29 @@ pandoc Hindernisvermeidung-Folgesystem.md -o Hindernisvermeidung-Folgesystem.htm
 - Bei **Blockierung beider IR-Module** aktiviert es `moveBackward()`, um den Rover rückwärts zu bewegen.
 - Ist **kein Hindernis** im Weg, wird `handleForwardMovement()` aufgerufen.
 
-### Distanzmessung und Bewegungssteuerung
+##### Distanzmessung und Bewegungssteuerung
 
 - Die Funktion `handleForwardMovement()` nutzt den **Ultraschallsensor**, um die Distanz zum nächsten Hindernis zu messen (mittels `readSensorData()`). Abhängig von dieser Distanz entscheidet das Programm über die nächste Aktion:
   - Bei einer **Distanz über 30 cm** wird `moveForward()` mit höherer Geschwindigkeit aufgerufen, da der Weg als sicher gilt.
   - Bei einer **Distanz zwischen 2 cm und 15 cm** deutet die Nähe eines Hindernisses darauf hin, dass zunächst `moveBackward()` und dann `backLeft()` ausgeführt wird, um eine Kollision zu vermeiden und eine neue Richtung einzuschlagen.
   - Bei **Distanzen zwischen 15 cm und 30 cm** führt der Rover eine vorsichtige Vorwärtsbewegung durch, indem `moveForward()` mit reduzierter Geschwindigkeit aufgerufen wird.
 
-### Datenfluss und Fehlerbehandlung
+##### Datenfluss und Fehlerbehandlung
 
 - Der **Datenfluss** im Programm ist strukturiert, um kontinuierlich Sensorwerte zu lesen und darauf basierend Entscheidungen zu treffen. Die Funktion `readSensorData()` spielt eine zentrale Rolle, indem sie präzise Distanzmessungen liefert, die für Bewegungsentscheidungen entscheidend sind.
 - **Fehlerbehandlung** kann in Form von Überprüfungen der Sensorwerte implementiert sein, z.B. wenn ungültige (zu hohe oder zu niedrige) Distanzwerte gelesen werden, was auf ein Problem mit dem Sensor hinweisen könnte. Diese Logik könnte innerhalb der `readSensorData()`-Funktion oder nach dem Aufruf dieser Funktion zur Anwendung kommen, ist aber im bereitgestellten Code nicht explizit enthalten.
 
-### Benutzerinteraktion
+##### Benutzerinteraktion
 
 - **Benutzerinteraktion** ist nicht direkt im Code enthalten, aber die serielle Ausgabe von Distanzwerten und möglicherweise von Debugging-Informationen ermöglicht eine Beobachtung und Interaktion während der Laufzeit.
 
-### Schleifen und bedingte Anweisungen
+##### Schleifen und bedingte Anweisungen
 
 - Das Programm nutzt **Schleifen** (repräsentiert durch die ständige Wiederholung der `loop()`-Funktion) und **bedingte Anweisungen** (if-else-Konstrukte), um auf Basis der Sensorwerte Entscheidungen zu treffen und entsprechende Aktionen auszuführen.
 
 \newpage
+
+#### Flussdiagramm Version 1 Hindernisvermeidungssystems
 
 ```plaintext
                   +-----------------+
@@ -158,6 +164,8 @@ pandoc Hindernisvermeidung-Folgesystem.md -o Hindernisvermeidung-Folgesystem.htm
 ```
 
 \newpage
+
+### Code Version 1 Hindernisvermeidungssystems
 
 ```cpp
 /**
@@ -300,7 +308,9 @@ void backLeft(int speed) {
 
 \newpage
 
-### Schlüsselbegriffe und Bedeutungen
+### Version 2 Hindernisvermeidungssystems
+
+#### Schlüsselbegriffe und Bedeutungen
 
 - **Ultraschallsensor (ULTRASCHALLSENSOR_PIN):** Ein Sensor, der Ultraschallwellen aussendet und reflektierte Signale empfängt, um die Entfernung zu Objekten zu messen. Dieser Sensor ist zentral für die Hinderniserkennung und -vermeidung.
 
@@ -323,6 +333,8 @@ void backLeft(int speed) {
 Ultraschallsensor, Infrarotsensoren, State, Geschwindigkeitssteuerung, Verzögerungen, Sensorleseintervall, Geschwindigkeitsanpassung, Bewegungsfunktionen
 
 \newpage
+
+#### Flussdiagramm  Version 2 Hindernisvermeidungssystems
 
 ```plaintext
                  +-------------------+
@@ -374,15 +386,15 @@ Ultraschallsensor, Infrarotsensoren, State, Geschwindigkeitssteuerung, Verzöger
 
 \newpage
 
-### Beschreibung
+#### Beschreibung Version 2 Hindernisvermeidungssystems
 
 Das Programm, das Sie beschreiben, steuert einen autonomen Rover durch die Integration verschiedener Sensoren und Bewegungslogiken. Der Kern des Programms basiert auf einem zyklischen Ablauf (Loop), in dem kontinuierlich Daten von Ultraschallsensoren und Infrarotsensoren gelesen werden, um die Umgebung des Rovers zu beurteilen und entsprechend zu navigieren. Hier eine detaillierte Beschreibung der Hauptlogik und des Datenflusses:
 
-#### Initialisierung
+##### Initialisierung
 
 Zu Beginn initialisiert das Programm die Systeme und Sensoren. Dies umfasst die Konfiguration der Pin-Belegungen für den Ultraschallsensor und die Infrarotsensoren sowie die Initialisierung der Motorsteuerung über die SoftPWM-Bibliothek. Die serielle Kommunikation wird ebenfalls gestartet, um Ausgaben für Debugging-Zwecke zu ermöglichen.
 
-#### Hauptlogik (Loop)
+##### Hauptlogik (Loop)
 
 Im Hauptteil des Programms findet die wiederkehrende Logik statt, die sich wie folgt zusammensetzt:
 
@@ -396,13 +408,15 @@ Im Hauptteil des Programms findet die wiederkehrende Logik statt, die sich wie f
 
 5. **Geschwindigkeitsanpassung:** Um sanfte Bewegungsübergänge zu gewährleisten, verwendet das Programm eine schrittweise Anpassung der Geschwindigkeit. Dies hilft dabei, abrupte Bewegungen zu vermeiden und die Mechanik des Rovers zu schonen.
 
-#### Schlüsselaspekte
+##### Schlüsselaspekte
 
 - **Datenfluss:** Die Sensordaten fließen von den Sensoren zum Entscheidungssystem des Programms, welches basierend auf diesen Daten und dem aktuellen Zustand des Rovers Entscheidungen trifft.
 - **Loop und bedingte Anweisungen:** Das Herzstück des Programms bildet eine Loop-Struktur, innerhalb derer bedingte Anweisungen (if-else-Strukturen und switch-cases) genutzt werden, um auf Basis der Sensordaten und des aktuellen Zustands des Rovers Entscheidungen zu treffen.
 - **Benutzerinteraktion:** Obwohl die Hauptinteraktion autonom stattfindet, ermöglicht die serielle Ausgabe von Informationen eine Überwachung des Systemzustands und der Entscheidungen des Rovers in Echtzeit.
 
 \newpage
+
+#### Code Version 2 Hindernisvermeidungssystems
 
 ```cpp
 /**
@@ -708,7 +722,7 @@ void stopMove() {
 }
 ```
 
-### Überprüfung
+#### Überprüfung
 
 - **Modulare Struktur:** Der Code ist gut strukturiert und modular aufgebaut, was die Wartbarkeit und Erweiterbarkeit erleichtert. Die Verwendung von Funktionen für spezifische Aufgaben wie `moveForward`, `moveBackward`, `backLeft`, `backRight`, `turnLeft`, `turnRight`, und `stopMove` verbessert die Lesbarkeit und Wiederverwendbarkeit des Codes.
   
@@ -716,7 +730,7 @@ void stopMove() {
   
 - **Sensorabfrage und Datenverarbeitung:** Die Funktion `readSensorData` implementiert eine robuste Logik für die Ultraschallmessung, einschließlich der Berechnung des Medians aus mehreren Messungen, was die Genauigkeit der Distanzmessung verbessert und die Anfälligkeit für Ausreißer reduziert.
 
-### Verbesserungsvorschläge
+#### Verbesserungsvorschläge
 
 1. **Optimierung der Sensorleseintervalle:** Derzeit wird ein festes Intervall von 4 Millisekunden zwischen den Lesevorgängen verwendet. Je nach Anwendungsfall und erforderlicher Reaktionsgeschwindigkeit könnte es vorteilhaft sein, dieses Intervall dynamisch anzupassen, um die Effizienz zu optimieren und Energie zu sparen.
 
@@ -730,6 +744,8 @@ void stopMove() {
 
 Zusammenfassend ist der bereitgestellte Code ein solider Ausgangspunkt für die Entwicklung eines autonomen Rovers mit fortschrittlichen Navigations- und Hindernisvermeidungsfähigkeiten. Durch die Berücksichtigung der genannten Verbesserungsvorschläge könnte die Leistungsfähigkeit und Zuverlässigkeit des Systems weiter gesteigert werden.
 
+\newpage
+
 ## Intelligentes Folgesystem
 
 - Modifikation des Codes, damit der Rover sich auf bewegende Objekte zubewegt, basierend auf der Distanzmessung durch den Ultraschallsensor und Objekterkennung durch Infrarotsensoren.
@@ -741,6 +757,8 @@ Zusammenfassend ist der bereitgestellte Code ein solider Ausgangspunkt für die 
 ```
 
 \newpage
+
+### Code Intelligentes Folgesystem
 
 ```cpp
 /**
